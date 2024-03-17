@@ -1,5 +1,6 @@
 import pygame
 from event_and_inputs import*
+from ents import*
 from settings import*
 
 
