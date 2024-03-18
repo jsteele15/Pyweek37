@@ -119,12 +119,6 @@ class Stations:
         self.y_pos = y_pos
 
 def get_lines(station1: Stations, station2: Stations) -> tuple: 
-    ####
-    ####if we put circles at the end of the lines and at the begining,
-    ####it'll give the ends rounded edges and will look less jaged
-    ####might work on that today, but if i don't heres a bit of code
-    ####pygame.draw.circle(surf, color, (0, 0), width // 2)
-    ####
 
     #returns [l1_start(x, y), l2_start, l3_start, l3_end] if not same x or y
 
@@ -192,10 +186,15 @@ class Route:
                 
     def draw(self, screen):
         for l in range(len(self.points)):
+            ###the circles give rounded edges to the corners and edges of the lines
+            pygame.draw.circle(screen, self.colour, (self.points[l]), 5)
+
             if l+1 < len(self.points):
                 pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], 11)
+                   
             if self.loop == True:
                 pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
+                
 
 
 

@@ -5,6 +5,7 @@ from pygame.locals import*
 
 def actions(setting, train_list):
 
+    ###this allows you to pause trains by hovering over them
     for t in range(len(train_list)):
         if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
             train_list[t].multi = 0

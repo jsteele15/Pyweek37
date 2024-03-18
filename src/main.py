@@ -9,10 +9,18 @@ def main():
     pygame.init()
     setting = Settings()
     screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT))
+
+    ###ui stuff
+    bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2, )
+    behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
     bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
-    score = LevelText( 30, 0, 0)
+
+    score = LevelText( 30, 10, 0)
     date_txt = LevelText( 30, setting.WIDTH/2 - 75, setting.HEIGHT/setting.HEIGHT)
     end_txt = LevelText( 50, setting.WIDTH/2 - 250, setting.HEIGHT/2)
+    under_txt = LevelText( 20, 20, setting.HEIGHT - 90, colour=(255, 255, 255))
+
+    
 
     ###to control the time of day
     start_time = pygame.time.get_ticks()
@@ -26,7 +34,7 @@ def main():
     r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True)
 
     #3rd line
-    s1 = Stations(None, 170, 520)
+    s1 = Stations(None, 200, 520)
     s2 = Stations(None, 300, 210)
     s3 = Stations(None, 360, 100)
 
@@ -103,7 +111,7 @@ def main():
         #timer for the progression of the months, i have a rudementary function in the ui
         #.py. but its not working as intended, will come back to
         days = (pygame.time.get_ticks() - start_time) // setting.game_speed
-
+        
         ###this 3 represents the number of seconds, we can change that 
         if days > 3:
             
@@ -143,10 +151,14 @@ def main():
 
 
         #draw the ui
-        bar.draw(screen, setting)
+        pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        
+        pygame.draw.circle(screen, (255, 255, 255), (100, setting.HEIGHT - 85), 50)        
+        bar.draw(screen)
+        behind_sign.draw(screen)
         score.draw(screen, f"PASSENGERS: {setting.passengers}")
         date_txt.draw(screen, f"DATE: {setting.months[setting.month]}")
-
+        under_txt.draw(screen, f"UNDERGROUND")
+        
         pygame.display.update()
         setting.clock.tick(60)
 

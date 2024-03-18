@@ -5,25 +5,27 @@ class Buttons:
     pass
 
 class Bars:
-    def __init__(self, x_pos, y_pos, width):
+    def __init__(self, x_pos, y_pos, width, colour = (255, 255, 255)):
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.width = width
+        self.colour = colour
 
-    def draw(self, screen, setting):
-        pygame.draw.rect(screen, setting.UI_COLOUR, pygame.Rect(self.x_pos, self.y_pos, self.width, 40))
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.colour, pygame.Rect(self.x_pos, self.y_pos, self.width, 40))
 
 
 class LevelText:
-    def __init__(self, size, x_pos, y_pos):
+    def __init__(self, size, x_pos, y_pos, colour = (0, 37, 144)):
     
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.size = size
+        self.colour = colour
         self.font = pygame.font.Font(Path(r'../res/LondonTube-MABx.ttf'), self.size)
 
     def draw(self, screen, txt):
-        text_surface = self.font.render(txt, True, (0, 37, 144))
+        text_surface = self.font.render(txt, True, self.colour)
 
         screen.blit(text_surface, (self.x_pos, self.y_pos))
   
