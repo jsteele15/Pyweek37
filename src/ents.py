@@ -22,6 +22,13 @@ class Train:
         ###the *2 speed doesnt work, as they keep going forever at some point
         self.multi = 1
 
+        #for scaling 
+        self.size = 10
+        self.size_half = self.size/2
+        #i added this width var, to work properly we need to rotate the train as well
+        #self.size_width = self.size*3
+        self.size_width = self.size
+
         ###this is to work out if the train has crashed or not
         self.alive = True
         self.fired = False
@@ -103,13 +110,13 @@ class Train:
 
             
 
-            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos, self.y_pos, 10, 10))
+            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width))
             ##sets the collision rect to the current location of the drawn rect
-            self.col_rect = pygame.Rect(self.x_pos, self.y_pos, 10, 10)
+            self.col_rect = pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width)
 
         else:
-            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos, self.y_pos, 10, 10))
-            self.col_rect = pygame.Rect(self.x_pos, self.y_pos, 10, 10)
+            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size_width, 15))
+            self.col_rect = pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width)
             self.x_pos += 30
         
 
@@ -190,7 +197,13 @@ class Route:
             pygame.draw.circle(screen, self.colour, (self.points[l]), 5)
 
             if l+1 < len(self.points):
-                pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], 11)
+                if self.points[l][0] == self.points[l+1][0] or self.points[l][1] == self.points[l+1][1]:
+                    w = 10 #straight width
+                    #pygame.draw.circle(screen, self.colour, (self.points[l]), 5)
+                else:
+                    w = 14 #width on angle
+                    #pygame.draw.circle(screen, self.colour, (self.points[l]), 6)
+                pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], w)
                    
             if self.loop == True:
                 pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)

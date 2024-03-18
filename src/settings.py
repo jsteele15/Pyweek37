@@ -1,8 +1,6 @@
 import pygame
 
 class Settings():
-    #colours
-    UI_COLOUR = (255, 255, 255)
 
 
     #for the screen size
