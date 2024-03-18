@@ -101,9 +101,7 @@ class Train:
                         self.dest = 0
             
 
-            if self.col_rect.collidepoint(pygame.mouse.get_pos()):
-                self.alive = False
-                self.fired = True
+            
 
             pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos, self.y_pos, 10, 10))
             ##sets the collision rect to the current location of the drawn rect
@@ -121,6 +119,13 @@ class Stations:
         self.y_pos = y_pos
 
 def get_lines(station1: Stations, station2: Stations) -> tuple: 
+    ####
+    ####if we put circles at the end of the lines and at the begining,
+    ####it'll give the ends rounded edges and will look less jaged
+    ####might work on that today, but if i don't heres a bit of code
+    ####pygame.draw.circle(surf, color, (0, 0), width // 2)
+    ####
+
     #returns [l1_start(x, y), l2_start, l3_start, l3_end] if not same x or y
 
     if station1.x_pos == station2.x_pos and station1.y_pos == station2.y_pos: #returns no line if stations on same position

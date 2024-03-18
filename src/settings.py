@@ -21,7 +21,7 @@ class Settings():
     game_speed = 1000
 
     ##for the day
-    month = 0
+    month = 1
     months = ["Nov", "Dec", "Jan", "Feb", "Mar", "April","May"]
     passengers = 0
 
