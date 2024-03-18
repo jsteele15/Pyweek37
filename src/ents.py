@@ -1,4 +1,5 @@
 import pygame
+import random
 from spritesheet import*
 
 class Train:
@@ -15,68 +16,104 @@ class Train:
         self.dest = 1 # self = self, dest = destination
         self.forward = True
 
+        ###help control speed
+        ###this is added to the end of the movement
+        ### *0 to stop a train, *2 to double speed
+        ###the *2 speed doesnt work, as they keep going forever at some point
+        self.multi = 1
+
+        ###this is to work out if the train has crashed or not
+        self.alive = True
+        self.fired = False
+        #for the collisions
+        self.col_rect = pygame.Rect(self.x_pos, self.y_pos, 10, 10)
+
         ###to test train rect
         self.RECT_COLOUR = (30, 30, 150)
 
         self.sprite = SpriteSheet(0, 0, 0, 0, 0, 0)
     
     def move(self, setting, screen):
-        can_pause = True
-        """if self.going == False:
-            print(f"Timer: {self.timer}, time: {pygame.time.get_ticks()}\n")
-            if self.timer <= pygame.time.get_ticks():
-                self. going == True
-                can_pause = False     """
-        if self.going == True:        
-            if self.route.points[self.dest][0] > self.route.points[self.prev_dest][0]:
-                self.x_pos += setting.SPEED
-            elif self.route.points[self.dest][0]< self.route.points[self.prev_dest][0]:
-                self.x_pos -= setting.SPEED
+        ###thisll work if the train hasnt crashed
+        if self.alive == True:
+            can_pause = True
+            """if self.going == False:
+                print(f"Timer: {self.timer}, time: {pygame.time.get_ticks()}\n")
+                if self.timer <= pygame.time.get_ticks():
+                    self. going == True
+                    can_pause = False     """
+            if self.going == True:        
+                if self.route.points[self.dest][0] > self.route.points[self.prev_dest][0]:
+                    self.x_pos += setting.SPEED* self.multi
+                elif self.route.points[self.dest][0]< self.route.points[self.prev_dest][0]:
+                    self.x_pos -= setting.SPEED* self.multi
 
-            if self.route.points[self.dest][1] > self.route.points[self.prev_dest][1]:
-                self.y_pos += setting.SPEED
-            elif self.route.points[self.dest][1] < self.route.points[self.prev_dest][1]:
-                self.y_pos -= setting.SPEED
+                if self.route.points[self.dest][1] > self.route.points[self.prev_dest][1]:
+                    self.y_pos += setting.SPEED* self.multi
+                elif self.route.points[self.dest][1] < self.route.points[self.prev_dest][1]:
+                    self.y_pos -= setting.SPEED* self.multi
 
-        """for s in self.route.stations:
-            if self.x_pos == s.x_pos and self.y_pos == s.y_pos:
-                if self.going and can_pause:
-                    self.timer = pygame.time.get_ticks() + 2000
-                    self.going = False"""
+            """for s in self.route.stations:
+                if self.x_pos == s.x_pos and self.y_pos == s.y_pos:
+                    if self.going and can_pause:
+                        self.timer = pygame.time.get_ticks() + 2000
+                        self.going = False"""
 
 
-        if self.loop == False:
-            if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
+            if self.loop == False:
+                if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
 
-                if self.forward == True:
+                    if self.forward == True:
+                        if self.dest < len(self.route.points)-1:
+                            self.prev_dest = self.dest
+                            self.dest += 1
+                        else:
+                            setting.passengers += random.randint(10, 150)
+                            
+                            self.forward = False
+                            self.prev_dest = self.dest
+                            
+                            self.dest -= 1
+                            
+
+                    elif self.forward == False:
+                        if self.dest > 0:
+                            self.prev_dest = self.dest
+                            self.dest -= 1
+                        else:
+                            setting.passengers += random.randint(10, 150)
+
+                            self.forward = True
+                            self.prev_dest = self.dest
+                            
+                            self.dest += 1
+                            
+                    print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
+
+            if self.loop == True:
+                if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
                     if self.dest < len(self.route.points)-1:
-                        self.prev_dest = self.dest
-                        self.dest += 1
+                            self.prev_dest = self.dest
+                            self.dest += 1
                     else:
-                        self.forward = False
+                        setting.passengers += random.randint(10, 150)
                         self.prev_dest = self.dest
-                        self.dest -= 1
+                        self.dest = 0
+            
 
-                elif self.forward == False:
-                    if self.dest > 0:
-                        self.prev_dest = self.dest
-                        self.dest -= 1
-                    else:
-                        self.forward = True
-                        self.prev_dest = self.dest
-                        self.dest += 1
-                print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
+            if self.col_rect.collidepoint(pygame.mouse.get_pos()):
+                self.alive = False
+                self.fired = True
 
-        if self.loop == True:
-            if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
-                if self.dest < len(self.route.points)-1:
-                        self.prev_dest = self.dest
-                        self.dest += 1
-                else:
-                    self.prev_dest = self.dest
-                    self.dest = 0
+            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos, self.y_pos, 10, 10))
+            ##sets the collision rect to the current location of the drawn rect
+            self.col_rect = pygame.Rect(self.x_pos, self.y_pos, 10, 10)
 
-        pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos, self.y_pos, 10, 10))
+        else:
+            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos, self.y_pos, 10, 10))
+            self.col_rect = pygame.Rect(self.x_pos, self.y_pos, 10, 10)
+            self.x_pos += 30
+        
 
 class Stations:
     def __init__(self, image, x_pos, y_pos):
@@ -143,6 +180,7 @@ class Route:
         self.loop = loop
         self.points = []
 
+    
         for s in range(len(stations)):
             if s+1 < len(stations):
                 self.points += get_lines(self.stations[s], self.stations[s+1])
