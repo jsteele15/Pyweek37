@@ -8,4 +8,11 @@ class Settings():
     #for the program to run
     RUNNING = True
 
+    #for train speed
+    SPEED = 1
+
+    ##for the day
+    day = 0
+    passengers = 0
+
     clock = pygame.time.Clock()
