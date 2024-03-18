@@ -2,38 +2,54 @@ import pygame
 from spritesheet import*
 
 class Train:
-    def __init__(self, image, x_pos, y_pos, route, loop = False):
-        self.x_pos = x_pos
-        self.y_pos = y_pos
+    def __init__(self, image, route, start = 0):
+        self.x_pos = route.points[start][0]
+        self.y_pos = route.points[start][1]
+        self.route = route
+        self.loop = route.loop
 
         ###to tell the train if its going
         self.going = True
-        self.route = route
+        self.timer = 0
         self.prev_dest = 0
         self.dest = 1 # self = self, dest = destination
         self.forward = True
-        self.loop = loop
+
         ###to test train rect
         self.RECT_COLOUR = (30, 30, 150)
 
         self.sprite = SpriteSheet(0, 0, 0, 0, 0, 0)
     
     def move(self, setting, screen):
-        if self.route[self.dest][0] > self.route[self.prev_dest][0]:
-            self.x_pos += setting.SPEED
-        elif self.route[self.dest][0]< self.route[self.prev_dest][0]:
-            self.x_pos -= setting.SPEED
+        can_pause = True
+        """if self.going == False:
+            print(f"Timer: {self.timer}, time: {pygame.time.get_ticks()}\n")
+            if self.timer <= pygame.time.get_ticks():
+                self. going == True
+                can_pause = False     """
+        if self.going == True:        
+            if self.route.points[self.dest][0] > self.route.points[self.prev_dest][0]:
+                self.x_pos += setting.SPEED
+            elif self.route.points[self.dest][0]< self.route.points[self.prev_dest][0]:
+                self.x_pos -= setting.SPEED
 
-        if self.route[self.dest][1] > self.route[self.prev_dest][1]:
-            self.y_pos += setting.SPEED
-        elif self.route[self.dest][1] < self.route[self.prev_dest][1]:
-            self.y_pos -= setting.SPEED
+            if self.route.points[self.dest][1] > self.route.points[self.prev_dest][1]:
+                self.y_pos += setting.SPEED
+            elif self.route.points[self.dest][1] < self.route.points[self.prev_dest][1]:
+                self.y_pos -= setting.SPEED
 
-        #print(f"x: {self.x_pos}, y: {self.y_pos}\n at dest: {self.x_pos == self.route[self.dest][0] and self.y_pos == self.route[self.dest][1]}")
+        """for s in self.route.stations:
+            if self.x_pos == s.x_pos and self.y_pos == s.y_pos:
+                if self.going and can_pause:
+                    self.timer = pygame.time.get_ticks() + 2000
+                    self.going = False"""
+
+
         if self.loop == False:
-            if self.x_pos == self.route[self.dest][0] and self.y_pos == self.route[self.dest][1]:
+            if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
+
                 if self.forward == True:
-                    if self.dest < len(self.route)-1:
+                    if self.dest < len(self.route.points)-1:
                         self.prev_dest = self.dest
                         self.dest += 1
                     else:
@@ -52,8 +68,8 @@ class Train:
                 print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
 
         if self.loop == True:
-            if self.x_pos == self.route[self.dest][0] and self.y_pos == self.route[self.dest][1]:
-                if self.dest < len(self.route)-1:
+            if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
+                if self.dest < len(self.route.points)-1:
                         self.prev_dest = self.dest
                         self.dest += 1
                 else:
@@ -66,3 +82,78 @@ class Stations:
     def __init__(self, image, x_pos, y_pos):
         self.x_pos = x_pos
         self.y_pos = y_pos
+
+def get_lines(station1: Stations, station2: Stations) -> tuple: 
+    #returns [l1_start(x, y), l2_start, l3_start, l3_end] if not same x or y
+
+    if station1.x_pos == station2.x_pos and station1.y_pos == station2.y_pos: #returns no line if stations on same position
+        return None 
+    
+    elif station1.x_pos == station2.x_pos or station1.y_pos == station2.y_pos: #returns single line if on same x or y
+        return [(station1.x_pos, station1.y_pos), (station2.x_pos, station2.y_pos)]
+    
+    else:
+        x_dist = abs(station2.x_pos - station1.x_pos)
+        y_dist = abs(station2.y_pos - station1.y_pos)
+
+        if x_dist > y_dist:
+            x_angle_len = y_dist
+            y_angle_len = y_dist
+            straight_len = int((x_dist - y_dist)/2)
+            
+            if station2.x_pos < station1.x_pos:
+                straight_len = -straight_len
+                x_angle_len = -x_angle_len
+
+            if station2.y_pos < station1.y_pos:
+                y_angle_len = -y_angle_len
+
+            return [
+                (station1.x_pos, station1.y_pos), 
+                (station1.x_pos + straight_len, station1.y_pos),
+                (station1.x_pos + straight_len + x_angle_len, station1.y_pos + y_angle_len),
+                (station1.x_pos + straight_len*2 + x_angle_len, station1.y_pos + y_angle_len)
+            ]
+        
+        if y_dist > x_dist:
+            x_angle_len = x_dist
+            y_angle_len = x_dist
+            straight_len = int((y_dist - x_dist)/2)
+            
+            if station2.y_pos < station1.y_pos:
+                straight_len = -straight_len
+                y_angle_len = -y_angle_len
+
+            if station2.x_pos < station1.x_pos:
+                x_angle_len = -x_angle_len
+
+            return [
+                (station1.x_pos, station1.y_pos),
+                (station1.x_pos, station1.y_pos + straight_len),
+                (station1.x_pos + x_angle_len, station1.y_pos + straight_len + y_angle_len),
+                (station1.x_pos + x_angle_len, station1.y_pos + straight_len*2 + y_angle_len)
+            ]
+
+        
+
+class Route:
+    def __init__(self, stations: list, colour: tuple = (255, 0, 0), loop: bool = False) -> None:
+        self.stations = stations
+        self.colour = colour
+        self.loop = loop
+        self.points = []
+
+        for s in range(len(stations)):
+            if s+1 < len(stations):
+                self.points += get_lines(self.stations[s], self.stations[s+1])
+                
+    def draw(self, screen):
+        for l in range(len(self.points)):
+            if l+1 < len(self.points):
+                pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], 11)
+            if self.loop == True:
+                pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
+
+
+
+        
