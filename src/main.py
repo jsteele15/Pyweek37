@@ -17,6 +17,7 @@ def main():
     ###ui stuff
     bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2, )
     behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
+    text_sign = Bars(20, setting.HEIGHT - 180, 760, colour = (0, 37, 144), height = 120)
     bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
 
     game_title1 = LevelText(60, setting.WIDTH + 100, 10)
@@ -28,6 +29,10 @@ def main():
     end_txt = LevelText( 50, setting.WIDTH/2 - 250, setting.HEIGHT/2)
     under_txt = LevelText( 20, 20, setting.HEIGHT - 90, colour=(255, 255, 255))
     
+    lt_1 = LevelText( 30, 40, setting.HEIGHT - 175, (255, 255, 255))
+    lt_2 = LevelText( 30, 40, setting.HEIGHT - 140, (255, 255, 255))
+    lt_3 = LevelText( 30, 40, setting.HEIGHT - 105, (255, 255, 255))
+    lt_4 = LevelText( 30, setting.WIDTH - 250, setting.HEIGHT/2- 100,(255, 255, 255)) #
     #buttons
     play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
     play_target = 50
@@ -181,7 +186,7 @@ def main():
             #skip_but.draw(screen, "SKIP", setting)
         
         if setting.state == "cut_scene":
-            cutscene.play(screen, setting, [skip_but, next_but])
+            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4], text_sign)
 
         if setting.state == "game":
             screen.blit(scaled_im, (0, -250))
