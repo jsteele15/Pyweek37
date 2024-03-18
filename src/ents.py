@@ -16,6 +16,14 @@ class Train:
         self.dest = 1 # self = self, dest = destination
         self.forward = True
 
+        ###this handels the timer for the freezing of the trains after being clicked on
+        self.frozen = False
+        self.f_tick_timer = pygame.time.get_ticks()
+
+        ###thisll handle the speedy shit
+        self.speedy = False
+        self.s_tick_timer = pygame.time.get_ticks()
+
         ###help control speed
         ###this is added to the end of the movement
         ### *0 to stop a train, *2 to double speed
@@ -23,7 +31,7 @@ class Train:
         self.multi = 1
 
         #for scaling 
-        self.size = 10
+        self.size = 20
         self.size_half = self.size/2
         #i added this width var, to work properly we need to rotate the train as well
         #self.size_width = self.size*3
@@ -37,12 +45,44 @@ class Train:
 
         ###to test train rect
         self.RECT_COLOUR = (30, 30, 150)
-
+        self.NORMAL_COLOUR = (30, 30, 150)
+        self.FROZE_COLOUR = (0, 213, 250)
+        self.SPEEDY_COLOUR = (255, 210, 0)
+        
         self.sprite = SpriteSheet(0, 0, 0, 0, 0, 0)
     
     def move(self, setting, screen):
         ###thisll work if the train hasnt crashed
         if self.alive == True:
+
+            ###this code handels freezing the train
+            if self.frozen == True:
+                froze_ticks = (pygame.time.get_ticks() - self.f_tick_timer) // setting.game_speed
+                self.multi = 0
+                self.RECT_COLOUR = self.FROZE_COLOUR
+                if froze_ticks > 2:
+                    self.multi = 1
+                    self.frozen = False
+                    self.RECT_COLOUR = self.NORMAL_COLOUR
+                    
+            if self.frozen == False:
+                self.f_tick_timer = pygame.time.get_ticks()
+
+            ###this is for speeding
+            if self.speedy == True:
+                froze_ticks = (pygame.time.get_ticks() - self.s_tick_timer) // setting.game_speed
+                self.multi = 2
+                self.RECT_COLOUR = self.SPEEDY_COLOUR
+                if froze_ticks > 2:
+                    self.multi = 1
+                    self.speedy = False
+                    self.RECT_COLOUR = self.NORMAL_COLOUR
+                    
+                    
+            if self.speedy == False:
+                self.s_tick_timer = pygame.time.get_ticks()
+
+
             can_pause = True
             """if self.going == False:
                 print(f"Timer: {self.timer}, time: {pygame.time.get_ticks()}\n")
@@ -95,7 +135,7 @@ class Train:
                             
                             self.dest += 1
                             
-                    print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
+                    #print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
 
             if self.loop == True:
                 if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:

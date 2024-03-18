@@ -23,4 +23,8 @@ class Settings():
     months = ["Nov", "Dec", "Jan", "Feb", "Mar", "April","May"]
     passengers = 0
 
+    ###a state to control whats playing
+    #[main_menu, cut_scene, game, end_scene]
+    state = "cut_scene"
+
     clock = pygame.time.Clock()

@@ -1,9 +1,12 @@
 import pygame
+from cutsene import*
+from music_and_sound import*
 from pathlib import Path
 from ui import*
 from event_and_inputs import*
 from ents import*
 from settings import*
+
 
 
 def main():
@@ -16,10 +19,23 @@ def main():
     behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
     bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
 
+    game_title1 = LevelText(60, setting.WIDTH + 100, 10)
+    game_title2 = LevelText(60, setting.WIDTH, 70)
+    game_title_tar = 50
+
     score = LevelText( 30, 10, 0)
     date_txt = LevelText( 30, setting.WIDTH/2 - 75, setting.HEIGHT/setting.HEIGHT)
     end_txt = LevelText( 50, setting.WIDTH/2 - 250, setting.HEIGHT/2)
     under_txt = LevelText( 20, 20, setting.HEIGHT - 90, colour=(255, 255, 255))
+    
+    #buttons
+    play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
+    play_target = 50
+    skip_but = Buttons(skip_func,[150, 50], (100, 100))
+
+    exit_but = Buttons(exit_func,[setting.WIDTH + 100, setting.HEIGHT/2 - 50], (100, 100))
+    
+    button_list = [play_but, skip_but, exit_but]
 
     ###to control the time of day
     start_time = pygame.time.get_ticks()
@@ -73,7 +89,7 @@ def main():
     l8_3 = Stations(None, 200, 280)
     l8_4 = Stations(None, 50, 400)
 
-    r8 = Route([l8_1, l8_2, l8_3, l8_4], (255, 215, 0))
+    r8 = Route([l8_1, l8_2, l8_3, l8_4], (247, 146, 57))
 
     #9th line
     l9_1 = Stations(None, 56, 56)
@@ -82,7 +98,7 @@ def main():
     l9_4 = Stations(None, 200, 546)
     l9_5 = Stations(None, 56, 206)
 
-    r9 = Route([l9_1, l9_2, l9_3, l9_4, l9_5, l9_1], (0, 176, 223))
+    r9 = Route([l9_1, l9_2, l9_3, l9_4, l9_5, l9_1], (42, 38, 39))
 
     #trains
     train2 = Train(None, r2)
@@ -117,101 +133,148 @@ def main():
     ###could use three scaled images to change based on the zoom if we get to that
     back_map = pygame.image.load("../res/map.png").convert_alpha()
     scaled_im = pygame.transform.scale(back_map,(1000,1000)) #2000, 2000
+    hp = pygame.image.load("../res/buildings2.png").convert_alpha()
+    sp = pygame.image.load("../res/buildings1.png").convert_alpha()
+    hp_current = setting.HEIGHT+200
+    hp_target = setting.HEIGHT -150
+    sp_current = setting.HEIGHT +200
+    cutscene = CutScene()
+
     
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background
-        screen.blit(scaled_im, (0, -250))
-        actions(setting, train_list)
         
-        for r in range(len(route_list)):
-            route_list[r].draw(screen)
-
-        for t in range(len(train_list)):
-            train_list[t].move(setting, screen)
-
-
-        ###this code iterates over the list of trains and works out if theyve collided. And sets their alive property to false. A little animation can be played then 
-        for i in range(len(train_list)):
-            for j in range(i + 1, len(train_list)):
-                if train_list[i].col_rect.colliderect(train_list[j].col_rect) and train_list[i].alive and train_list[j].alive:
-                    train_list[i].alive = False
-                    train_list[j].alive = False
-
-
-        #timer for the progression of the months, i have a rudementary function in the ui
-        #.py. but its not working as intended, will come back to
-        days = (pygame.time.get_ticks() - start_time) // setting.game_speed
+        actions(setting, train_list, button_list)
         
-        ###this 3 represents the number of seconds, we can change that 
-        if days > 3:
+        if setting.state == "main_menu":
+            play_but.draw(screen, "PLAY", setting)
+            game_title1.draw(screen, "Thomas the Minister")
+            game_title2.draw(screen, "of Transport")
+            exit_but.draw(screen, "EXIT", setting)
+            if game_title1.x_pos > game_title_tar:
+                game_title1.x_pos -= 10
+
+            if game_title2.x_pos > game_title_tar:
+                game_title2.x_pos -= 10
+
+            if play_but.pos[0] > play_target:
+                play_but.pos[0] -= 10
+
+            if exit_but.pos[0] > play_target:
+                exit_but.pos[0] -= 10
             
-            if setting.months[setting.month] == "Nov" and nov_fired == False:
-                for i in range(len(nov_list)):
-                    route_list.append(nov_list[i][0])
-                    train_list.append(nov_list[i][1])
-                    nov_fired = True
-                #setting.month += 1
-                #start_time = pygame.time.get_ticks()
+            screen.blit(hp, (setting.WIDTH - 200,hp_current))
+            screen.blit(sp, (setting.WIDTH/2 , sp_current+100))
 
-            if setting.months[setting.month] == "Dec" and dec_fired == False:
-                for i in range(len(dec_list)):
-                    route_list.append(dec_list[i][0])
-                    train_list.append(dec_list[i][1])
-                    dec_fired = True
+            if hp_target < hp_current:
+                hp_current -= 5
+            if hp_target < sp_current +100:
+                sp_current -= 5
 
-            if setting.months[setting.month] == "Jan" and jan_fired == False:
-                for i in range(len(jan_list)):
-                    route_list.append(jan_list[i][0])
-                    train_list.append(jan_list[i][1])
-                    dec_fired = True
+            pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        
+            pygame.draw.circle(screen, (255, 255, 255), (100, setting.HEIGHT - 85), 50)        
+            behind_sign.draw(screen)
+            under_txt.draw(screen, f"UNDERGROUND")
+            #this skip is to go into the cutscenes but thats for later
+            #skip_but.draw(screen, "SKIP", setting)
+        
+        if setting.state == "cut_scene":
+            cutscene.play(screen, setting)
 
-            if setting.months[setting.month] == "Feb" and feb_fired == False:
-                for i in range(len(feb_list)):
-                    route_list.append(feb_list[i][0])
-                    train_list.append(feb_list[i][1])
-                    dec_fired = True
-       
-            if setting.months[setting.month] == "Mar" and mar_fired == False:
-                for i in range(len(mar_list)):
-                    route_list.append(mar_list[i][0])
-                    train_list.append(mar_list[i][1])
-                    dec_fired = True
+        if setting.state == "game":
+            screen.blit(scaled_im, (0, -250))
+            for r in range(len(route_list)):
+                route_list[r].draw(screen)
 
-            if setting.months[setting.month] == "April" and apr_fired == False:
-                for i in range(len(apr_list)):
-                    route_list.append(apr_list[i][0])
-                    train_list.append(apr_list[i][1])
-                    dec_fired = True
+            for t in range(len(train_list)):
+                train_list[t].move(setting, screen)
+
+
+            ###this code iterates over the list of trains and works out if theyve collided. And sets their alive property to false. A little animation can be played then 
+            for i in range(len(train_list)):
+                for j in range(i + 1, len(train_list)):
+                    if train_list[i].col_rect.colliderect(train_list[j].col_rect) and train_list[i].alive and train_list[j].alive:
+                        train_list[i].alive = False
+                        train_list[j].alive = False
+
+
+            #timer for the progression of the months, i have a rudementary function in the ui
+            #.py. but its not working as intended, will come back to
+            days = (pygame.time.get_ticks() - start_time) // setting.game_speed
+            
+            ###this 3 represents the number of seconds, we can change that 
+            if days > 3:
                 
-                #setting.month += 1
-                #start_time = pygame.time.get_ticks()
+                if setting.months[setting.month] == "Nov" and nov_fired == False:
+                    for i in range(len(nov_list)):
+                        route_list.append(nov_list[i][0])
+                        train_list.append(nov_list[i][1])
+                        nov_fired = True
+                    #setting.month += 1
+                    #start_time = pygame.time.get_ticks()
+
+                if setting.months[setting.month] == "Dec" and dec_fired == False:
+                    for i in range(len(dec_list)):
+                        route_list.append(dec_list[i][0])
+                        train_list.append(dec_list[i][1])
+                        dec_fired = True
+
+                if setting.months[setting.month] == "Jan" and jan_fired == False:
+                    for i in range(len(jan_list)):
+                        route_list.append(jan_list[i][0])
+                        train_list.append(jan_list[i][1])
+                        dec_fired = True
+
+                if setting.months[setting.month] == "Feb" and feb_fired == False:
+                    for i in range(len(feb_list)):
+                        route_list.append(feb_list[i][0])
+                        train_list.append(feb_list[i][1])
+                        dec_fired = True
+        
+                if setting.months[setting.month] == "Mar" and mar_fired == False:
+                    for i in range(len(mar_list)):
+                        route_list.append(mar_list[i][0])
+                        train_list.append(mar_list[i][1])
+                        dec_fired = True
+
+                if setting.months[setting.month] == "April" and apr_fired == False:
+                    for i in range(len(apr_list)):
+                        route_list.append(apr_list[i][0])
+                        train_list.append(apr_list[i][1])
+                        dec_fired = True
+                    
+                    #setting.month += 1
+                    #start_time = pygame.time.get_ticks()
+                
+
+
+                if setting.months[setting.month] == "May":
+                    for i in range(len(train_list)):
+                        train_list[i].alive = False
+
+                    screen.fill((255, 255, 255))
+                    end_txt.draw(screen, f"YOUR WIFE LEFT YOU =D")
+
+                if setting.months[setting.month] != "May":
+                    
+                    setting.month += 1
+                    start_time = pygame.time.get_ticks()
+
+
+
+            #draw the ui
+            pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        
+            pygame.draw.circle(screen, (255, 255, 255), (100, setting.HEIGHT - 85), 50)        
+            bar.draw(screen)
+            behind_sign.draw(screen)
+            score.draw(screen, f"PASSENGERS: {setting.passengers}")
+            date_txt.draw(screen, f"DATE: {setting.months[setting.month]}")
+            under_txt.draw(screen, f"UNDERGROUND")
             
 
+            
 
-            if setting.months[setting.month] == "May":
-                for i in range(len(train_list)):
-                    train_list[i].alive = False
-
-                screen.fill((255, 255, 255))
-                end_txt.draw(screen, f"YOUR WIFE LEFT YOU =D")
-
-            if setting.months[setting.month] != "May":
-                
-                setting.month += 1
-                start_time = pygame.time.get_ticks()
-
-
-
-        #draw the ui
-        pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        
-        pygame.draw.circle(screen, (255, 255, 255), (100, setting.HEIGHT - 85), 50)        
-        bar.draw(screen)
-        behind_sign.draw(screen)
-        score.draw(screen, f"PASSENGERS: {setting.passengers}")
-        date_txt.draw(screen, f"DATE: {setting.months[setting.month]}")
-        under_txt.draw(screen, f"UNDERGROUND")
-        
         pygame.display.update()
         setting.clock.tick(60)
 
