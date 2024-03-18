@@ -114,6 +114,7 @@ class Train:
                         if self.dest < len(self.route.points)-1:
                             self.prev_dest = self.dest
                             self.dest += 1
+                            setting.passengers += random.randint(10, 150)
                         else:
                             setting.passengers += random.randint(10, 150)
                             
@@ -127,6 +128,7 @@ class Train:
                         if self.dest > 0:
                             self.prev_dest = self.dest
                             self.dest -= 1
+                            setting.passengers += random.randint(10, 150)
                         else:
                             setting.passengers += random.randint(10, 150)
 
@@ -142,6 +144,7 @@ class Train:
                     if self.dest < len(self.route.points)-1:
                             self.prev_dest = self.dest
                             self.dest += 1
+                            setting.passengers += random.randint(10, 150)
                     else:
                         setting.passengers += random.randint(10, 150)
                         self.prev_dest = self.dest

@@ -3,18 +3,17 @@ import sys
 from pygame.locals import*
 
 def play_func(setting):
-    setting.state = "game"
+    setting.state = "cut_scene"
 
 def skip_func(setting):
-    print("skip")
+    setting.state = "game"
 
 def exit_func(setting):
     sys.exit()
 
-def next_func(txt_state):
-    print("next")
-    txt_state += 1
-    
+def next_func(setting):
+    setting.txt_state += 1
+
 
 
 def actions(setting, train_list, button_list):

@@ -25,6 +25,8 @@ class Settings():
 
     ###a state to control whats playing
     #[main_menu, cut_scene, game, end_scene]
-    state = "cut_scene"
+    state = "main_menu"
+    #1 or 2
+    txt_state = 1
 
     clock = pygame.time.Clock()

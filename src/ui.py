@@ -1,37 +1,6 @@
 import pygame
 from pathlib import Path
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Bars:
     def __init__(self, x_pos, y_pos, width, colour = (255, 255, 255), height = 40):
         self.x_pos = x_pos

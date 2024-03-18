@@ -17,7 +17,8 @@ def main():
     ###ui stuff
     bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2, )
     behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
-    text_sign = Bars(20, setting.HEIGHT - 180, 760, colour = (0, 37, 144), height = 120)
+    text_sign = Bars(setting.WIDTH + 60, setting.HEIGHT - 180, 760, colour = (0, 37, 144), height = 120)
+    speach_sign = Bars( 530, 190, 150, colour = (0, 37, 144), height = 60)
     bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
 
     game_title1 = LevelText(60, setting.WIDTH + 100, 10)
@@ -29,9 +30,12 @@ def main():
     end_txt = LevelText( 50, setting.WIDTH/2 - 250, setting.HEIGHT/2)
     under_txt = LevelText( 20, 20, setting.HEIGHT - 90, colour=(255, 255, 255))
     
-    lt_1 = LevelText( 30, 40, setting.HEIGHT - 175, (255, 255, 255))
-    lt_2 = LevelText( 30, 40, setting.HEIGHT - 140, (255, 255, 255))
-    lt_3 = LevelText( 30, 40, setting.HEIGHT - 105, (255, 255, 255))
+    lt_1 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 175, (255, 255, 255))
+    lt_2 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 140, (255, 255, 255))
+    lt_3 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 105, (255, 255, 255))
+    lt_5 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 175, (255, 255, 255))
+    lt_6 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 140, (255, 255, 255))
+    lt_7 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 105, (255, 255, 255))
     lt_4 = LevelText( 30, setting.WIDTH - 250, setting.HEIGHT/2- 100,(255, 255, 255)) #
     #buttons
     play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
@@ -39,9 +43,9 @@ def main():
     skip_but = Buttons(skip_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
 
     exit_but = Buttons(exit_func,[setting.WIDTH + 100, setting.HEIGHT/2 - 50], (100, 100))
-    next_but = Buttons(next_func, [setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
+    next_but = Buttons(next_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
 
-    button_list = [play_but, skip_but, exit_but]
+    button_list = [play_but, skip_but, exit_but, next_but]
 
     ###to control the time of day
     start_time = pygame.time.get_ticks()
@@ -186,8 +190,8 @@ def main():
             #skip_but.draw(screen, "SKIP", setting)
         
         if setting.state == "cut_scene":
-            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4], text_sign)
-
+            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7], [text_sign, speach_sign])
+            
         if setting.state == "game":
             screen.blit(scaled_im, (0, -250))
             for r in range(len(route_list)):
@@ -210,7 +214,7 @@ def main():
             days = (pygame.time.get_ticks() - start_time) // setting.game_speed
             
             ###this 3 represents the number of seconds, we can change that 
-            if days > 3:
+            if days > 30:
                 
                 if setting.months[setting.month] == "Nov" and nov_fired == False:
                     for i in range(len(nov_list)):
@@ -278,8 +282,7 @@ def main():
             date_txt.draw(screen, f"DATE: {setting.months[setting.month]}")
             under_txt.draw(screen, f"UNDERGROUND")
             
-
-            
+      
 
         pygame.display.update()
         setting.clock.tick(60)
