@@ -11,6 +11,9 @@ def skip_func(setting):
 def exit_func(setting):
     sys.exit()
 
+def next_func(setting):
+    pass
+
 
 def actions(setting, train_list, button_list):
 

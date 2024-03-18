@@ -3,7 +3,7 @@ from pathlib import Path
 
 class SpriteSheet:
     def __init__(self, image, animation_steps, x_pos, y_pos, x_cut, y_cut, ind = 0):
-        self.shett = image
+        self.sheet = image
         self.animation_list = []
         self.animation_steps = animation_steps
 
@@ -15,7 +15,7 @@ class SpriteSheet:
         BLACK_GRE = (11, 158, 3)
 
         for x in range(self.animation_steps):
-            self.animation_list.append(self.get_image(x, self.cut, self.y_cut, BLACK_GRE))
+            self.animation_list.append(self.get_image(x, self.x_cut, self.y_cut, BLACK_GRE))
         
     def get_image(self, frame, width, height, colour):
         image = pygame.Surface((width, height))

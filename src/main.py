@@ -31,10 +31,11 @@ def main():
     #buttons
     play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
     play_target = 50
-    skip_but = Buttons(skip_func,[150, 50], (100, 100))
+    skip_but = Buttons(skip_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
 
     exit_but = Buttons(exit_func,[setting.WIDTH + 100, setting.HEIGHT/2 - 50], (100, 100))
-    
+    next_but = Buttons(next_func, [setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
+
     button_list = [play_but, skip_but, exit_but]
 
     ###to control the time of day
@@ -180,7 +181,7 @@ def main():
             #skip_but.draw(screen, "SKIP", setting)
         
         if setting.state == "cut_scene":
-            cutscene.play(screen, setting)
+            cutscene.play(screen, setting, [skip_but, next_but])
 
         if setting.state == "game":
             screen.blit(scaled_im, (0, -250))
