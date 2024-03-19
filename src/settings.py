@@ -25,7 +25,7 @@ class Settings():
 
     ###a state to control whats playing
     #[main_menu, cut_scene, game, end_scene]
-    state = "main_menu"
+    state = "game"
     #1 or 2
     txt_state = 1
 

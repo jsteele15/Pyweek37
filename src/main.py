@@ -53,7 +53,7 @@ def main():
 
     ###second line###
     l2_start = Stations(None, 50, 50)
-    l2_1 = Stations(None, 100, 350)
+    l2_1 = Stations(None, 50, 400)
     l2_2 = Stations(None, 400, 400)
     l2_3 = Stations(None, 400, 50)
     r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True)
@@ -154,6 +154,7 @@ def main():
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background
+        print(f"X: {train_list[0].x_pos}, Y: {train_list[0].y_pos}\n")
         
         actions(setting, train_list, button_list)
         

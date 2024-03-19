@@ -45,4 +45,9 @@ def actions(setting, train_list, button_list):
                 for t in range(len(train_list)):
                     if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
                         train_list[t].speedy = True
+"""
+                        if train_list[t].x_pos % 2:
+                            train_list[t].x_pos += 1
 
+                        elif train_list[t].y_pos % 2:
+                            train_list[t].y_pos += 1"""

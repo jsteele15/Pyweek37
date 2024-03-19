@@ -108,47 +108,57 @@ class Train:
 
 
             if self.loop == False:
-                if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
+                #if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
+                if self.route.points[self.dest][0] - setting.SPEED*self.multi < self.x_pos < self.route.points[self.dest][0] + setting.SPEED*self.multi:
+                    if self.route.points[self.dest][1] - setting.SPEED*self.multi < self.y_pos < self.route.points[self.dest][1] + setting.SPEED*self.multi:
 
-                    if self.forward == True:
-                        if self.dest < len(self.route.points)-1:
-                            self.prev_dest = self.dest
-                            self.dest += 1
-                            setting.passengers += random.randint(10, 150)
-                        else:
-                            setting.passengers += random.randint(10, 150)
-                            
-                            self.forward = False
-                            self.prev_dest = self.dest
-                            
-                            self.dest -= 1
-                            
+                        self.x_pos = self.route.points[self.dest][0]
+                        self.y_pos = self.route.points[self.dest][1]
 
-                    elif self.forward == False:
-                        if self.dest > 0:
-                            self.prev_dest = self.dest
-                            self.dest -= 1
-                            setting.passengers += random.randint(10, 150)
-                        else:
-                            setting.passengers += random.randint(10, 150)
+                        if self.forward == True:
+                            if self.dest < len(self.route.points)-1:
+                                self.prev_dest = self.dest
+                                self.dest += 1
+                                setting.passengers += random.randint(10, 150)
+                            else:
+                                setting.passengers += random.randint(10, 150)
+                                
+                                self.forward = False
+                                self.prev_dest = self.dest
+                                
+                                self.dest -= 1
+                                
 
-                            self.forward = True
-                            self.prev_dest = self.dest
-                            
-                            self.dest += 1
-                            
-                    #print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
+                        elif self.forward == False:
+                            if self.dest > 0:
+                                self.prev_dest = self.dest
+                                self.dest -= 1
+                                setting.passengers += random.randint(10, 150)
+                            else:
+                                setting.passengers += random.randint(10, 150)
+
+                                self.forward = True
+                                self.prev_dest = self.dest
+                                
+                                self.dest += 1
+                                
+                        #print(f"x: {self.x_pos}, y: {self.y_pos}\n dest: {self.dest}") 
 
             if self.loop == True:
-                if self.x_pos == self.route.points[self.dest][0] and self.y_pos == self.route.points[self.dest][1]:
-                    if self.dest < len(self.route.points)-1:
-                            self.prev_dest = self.dest
-                            self.dest += 1
+                if self.route.points[self.dest][0] - setting.SPEED*self.multi < self.x_pos < self.route.points[self.dest][0] + setting.SPEED*self.multi:
+                    if self.route.points[self.dest][1] - setting.SPEED*self.multi < self.y_pos < self.route.points[self.dest][1] + setting.SPEED*self.multi:
+
+                        self.x_pos = self.route.points[self.dest][0]
+                        self.y_pos = self.route.points[self.dest][1]
+                        
+                        if self.dest < len(self.route.points)-1:
+                                self.prev_dest = self.dest
+                                self.dest += 1
+                                setting.passengers += random.randint(10, 150)
+                        else:
                             setting.passengers += random.randint(10, 150)
-                    else:
-                        setting.passengers += random.randint(10, 150)
-                        self.prev_dest = self.dest
-                        self.dest = 0
+                            self.prev_dest = self.dest
+                            self.dest = 0
             
 
             
