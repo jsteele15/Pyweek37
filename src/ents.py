@@ -150,7 +150,7 @@ class Train:
 
                         self.x_pos = self.route.points[self.dest][0]
                         self.y_pos = self.route.points[self.dest][1]
-                        
+
                         if self.dest < len(self.route.points)-1:
                                 self.prev_dest = self.dest
                                 self.dest += 1
@@ -260,7 +260,28 @@ class Route:
                    
             if self.loop == True:
                 pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
-                
+
+    def check_overlap(self, route_2):
+        pass
+        """for s in range(len(self.stations)):
+            for s2 in range(len(route_2.stations)):
+                if self.stations[s+1] < len(self.stations) and route_2.stations[s2+1] < len(route_2.stations):
+                    x = self.stations[s].x_pos
+                    y = self.stations[s].y_pos
+
+                    while x != self.stations[s+1].x_pos and y != self.stations[s+1].y_pos:
+                        if self.stations[s+1].x_pos > self.stations[s].x_pos:
+                            x += 1
+
+                        elif self.stations[s+1].x_pos < self.stations[s].x_pos:
+                            x -= 1
+
+                        if self.stations[s+1].y_pos > self.stations[s].y_pos:
+                            y += 1
+                            
+                        elif self.stations[s+1].y_pos < self.stations[s].y_pos:
+                            y -= 1"""
+
 
 
 

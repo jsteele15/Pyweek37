@@ -11,6 +11,13 @@ from settings import*
 
 def main():
     pygame.init()
+
+    pygame.display.set_caption("Thomas the Minister of Transportation")
+    
+    ###adds an icon
+    #icon = pygame.image.load("../res/icon.png")
+    #pygame.display.set_icon(icon)   
+
     setting = Settings()
     screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT))
 
@@ -36,6 +43,9 @@ def main():
     lt_5 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 175, (255, 255, 255))
     lt_6 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 140, (255, 255, 255))
     lt_7 = LevelText( 30, setting.WIDTH +100, setting.HEIGHT - 105, (255, 255, 255))
+
+    lt_8 = LevelText( 25, 40, 105)
+    lt_9 = LevelText( 25, 40, 50)
     lt_4 = LevelText( 30, setting.WIDTH - 250, setting.HEIGHT/2- 100,(255, 255, 255)) #
     #buttons
     play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
@@ -50,6 +60,20 @@ def main():
     ###to control the time of day
     start_time = pygame.time.get_ticks()
     
+    ###tutorial line###
+    tutorial_line_p2_1 = Stations(None, 57, 200)
+    tutorial_line_p2_2 = Stations(None, 290, 200)
+
+    tutorial_line_p1_1 = Stations(None, 477, 200)
+    tutorial_line_p1_2 = Stations(None, 710, 200)
+    r_t_1 = Route([tutorial_line_p2_1, tutorial_line_p2_2], ((0, 255, 0)))
+    r_t_2 = Route([tutorial_line_p1_1, tutorial_line_p1_2], ((100, 200, 200)))
+
+    t_t_1 =  Train(None, r_t_1)
+    t_t_2 =  Train(None, r_t_2)
+
+    tutorial_list_lines = [r_t_1, r_t_2]
+    tutorial_list_trains = [t_t_1, t_t_2]
 
     ###second line###
     l2_start = Stations(None, 50, 50)
@@ -153,15 +177,13 @@ def main():
     
     while setting.RUNNING:
         screen.fill((255, 255, 251))
-        ###blitting the background
-        print(f"X: {train_list[0].x_pos}, Y: {train_list[0].y_pos}\n")
-        
-        actions(setting, train_list, button_list)
+        ###blitting the background        
+        actions(setting, train_list, button_list, tutorial_list_trains)
         
         if setting.state == "main_menu":
             play_but.draw(screen, "PLAY", setting)
             game_title1.draw(screen, "Thomas the Minister")
-            game_title2.draw(screen, "of Transport")
+            game_title2.draw(screen, "of Transportation")
             exit_but.draw(screen, "EXIT", setting)
             if game_title1.x_pos > game_title_tar:
                 game_title1.x_pos -= 10
@@ -191,7 +213,13 @@ def main():
             #skip_but.draw(screen, "SKIP", setting)
         
         if setting.state == "cut_scene":
-            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7], [text_sign, speach_sign])
+            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8, lt_9], [text_sign, speach_sign])
+            if setting.txt_state == 4:
+                for r in range(len(tutorial_list_lines)):
+                    tutorial_list_lines[r].draw(screen)
+
+                for t in range(len(tutorial_list_trains)):
+                    tutorial_list_trains[t].move(setting, screen)
             
         if setting.state == "game":
             screen.blit(scaled_im, (0, -250))
@@ -215,7 +243,7 @@ def main():
             days = (pygame.time.get_ticks() - start_time) // setting.game_speed
             
             ###this 3 represents the number of seconds, we can change that 
-            if days > 30:
+            if days > 3:
                 
                 if setting.months[setting.month] == "Nov" and nov_fired == False:
                     for i in range(len(nov_list)):

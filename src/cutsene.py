@@ -8,7 +8,10 @@ class CutScene:
         self.minister = pygame.image.load("../res/tory.png").convert_alpha()
         self.phone = pygame.image.load("../res/phone.png").convert_alpha()
         self.rece = pygame.image.load("../res/rec.png").convert_alpha()
+        self.mou = pygame.image.load("../res/m.png").convert_alpha()
 
+        self.left_click = SpriteSheet(self.mou, 3, 300, 300, 400, 400, 2)
+        self.right_click = SpriteSheet(self.mou, 3, 300, 300, 400, 400, 1)
         self.sheet_phone = SpriteSheet(self.phone, 1, 200, 200, 100, 100)
         self.sheet_recev = SpriteSheet(self.rece, 1, 200, 200,93, 33)
         self.angle = 0
@@ -32,6 +35,7 @@ class CutScene:
 
     def play(self, screen, setting, button_list, text_list, block_list):
         screen.blit(self.minister, (0, 0))
+        
         
         #screen.blit(self.rece, (200, 300))
         screen.blit(self.sheet_phone.animation_list[self.sheet_phone.ind], (500, 300))
@@ -67,6 +71,7 @@ class CutScene:
             text_list[0].draw(screen, "Hello Mr Transport Minister. With 7 months until the")
             text_list[1].draw(screen, "election. We've decided to enact heavy tax cuts. To")
             text_list[2].draw(screen, "fund this we've decided to cut waste... ")
+            
             
             #text_target
             #text_list[0].x_pos += 10
@@ -117,7 +122,17 @@ class CutScene:
 
             text_list[3].draw(screen, "BLIMEY!")
 
-            if setting.txt_state >= 4:
+            if setting.txt_state == 4:
+                button_list[1].refresh()
+                pygame.draw.rect(screen, (255, 255, 255), pygame.Rect((0,0), (2000, 2000)))
+                button_list[0].draw(screen, "SKIP", setting)
+                button_list[1].draw(screen, "NEXT", setting)
+                screen.blit(self.left_click.animation_list[self.left_click.ind], (30, 230))
+                screen.blit(self.right_click.animation_list[self.right_click.ind], (450, 230))
+                text_list[8].draw(screen, "LEFT CLICK ON TRAINS                   RIGHT CLICK ON TRAINS")
+                text_list[7].draw(screen, "     TO STOP THEM                                TO SPEED THEM UP")
+
+            if setting.txt_state == 5:
                 setting.state = "game"
 
 

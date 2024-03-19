@@ -16,7 +16,7 @@ def next_func(setting):
 
 
 
-def actions(setting, train_list, button_list):
+def actions(setting, train_list, button_list, tutorial_list):
 
     pos = pygame.mouse.get_pos()
 
@@ -37,6 +37,10 @@ def actions(setting, train_list, button_list):
                     if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
                         train_list[t].frozen = True
 
+                for t in range(len(tutorial_list)):
+                    if tutorial_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
+                        tutorial_list[t].frozen = True
+
                 for b in button_list:
                     if b.rect.collidepoint(pos):
                         b.clicked = True
@@ -45,6 +49,10 @@ def actions(setting, train_list, button_list):
                 for t in range(len(train_list)):
                     if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
                         train_list[t].speedy = True
+
+                for t in range(len(tutorial_list)):
+                    if tutorial_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
+                        tutorial_list[t].speedy = True
 """
                         if train_list[t].x_pos % 2:
                             train_list[t].x_pos += 1
