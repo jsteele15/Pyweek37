@@ -22,10 +22,10 @@ class Settings():
     SPEED = speeds[game_speed_ind]
 
     ##for the day
-    month = 1
+    month = 0
     months = ["Nov", "Dec", "Jan", "Feb", "Mar", "April","May"]
     
-    day_counter = 24
+    day_counter = 0
     stored_counter = 0
 
     ###stats for the end
@@ -34,13 +34,22 @@ class Settings():
     freezes = 0
     speedys = 0
     elections_won = 0
-    end_txts = ["In the most train focused election in British history, we came out victorious. You now get to do this for the next five years, we're so sorry!",
-                "In the most train focused election in British history, we ended up losing. You must now retire to a six figure job in the private sector, we're so sorry!"]
+    end_txts = [
+                "In the most train focused election in British history, \nwe ended up losing. You must now retire to a six figure job \nin the private sector, we're so sorry!",
+                "In the most train focused election in British history, \nwe came out victorious. You now get to do this for the next \nfive years, we're so sorry!"]
     ###a state to control whats playing
-    #[main_menu, cut_scene, game, end_scene]
-    state = "main_menu"
+    #[main_menu, cut_scene, game, end]
+    state = "game"
     #1 or 2
     txt_state = 1
     
+    ##routes and train lists
+    starter_r_1 = 0
+    starter_r_2 = 0
+    starter_t_1 = 0
+    starter_t_2 = 0
+    route_list = []
+    train_list = []
     clock = pygame.time.Clock()
+
 

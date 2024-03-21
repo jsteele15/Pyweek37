@@ -29,12 +29,13 @@ class LevelText:
   
 
 class Buttons:
-    def __init__(self, func, pos, size, txt_size = 30):
+    def __init__(self, func, pos, size, txt_size = 30, speed_butts = 0):
         self.func = func
         self.pos = pos
         self.txt_size = txt_size
         self.size = size
         self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
+        self.speed_butts = 0
 
         self.clicked = False
         self.once = False
@@ -42,8 +43,12 @@ class Buttons:
 
         
 
-    def draw(self, screen, txto, change):
-        txt = LevelText(self.txt_size, self.pos[0], self.pos[1])
+    def draw(self, screen, txto, change ):
+        if self.speed_butts == 0:
+            txt = LevelText(self.txt_size, self.pos[0], self.pos[1])
+        if self.speed_butts == 1:
+            txt = LevelText(self.txt_size, self.pos[0], self.pos[1], colour = (255, 210, 0))
+
         self.rect = pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
         txt.draw(screen, txto)
 
@@ -67,7 +72,14 @@ class Buttons:
         self.once = False
 
 
+def speed_buttons_change(setting, button_list):
+    for b in range(len(button_list)):
+        if b == setting.SPEED:
+            button_list[b].speed_butts = 1
+        else:
+            button_list[b].speed_butts = 0
         
+        button_list[b].refresh()
         
         
         

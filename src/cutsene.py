@@ -33,6 +33,8 @@ class CutScene:
         self.text_target = 30
         self.rect_target = 20
 
+        self.end_target = 50
+
     def play(self, screen, setting, button_list, text_list, block_list):
         screen.blit(self.minister, (0, 0))
         
@@ -134,6 +136,28 @@ class CutScene:
 
             if setting.txt_state == 5:
                 setting.state = "game"
+
+    def end_scene(self, setting, screen, txt_list, button_list):
+        screen.blit(self.minister, (200, 0))
+
+        button_list[0].draw(screen, "REPLAY", setting)
+        button_list[1].draw(screen, "EXIT", setting)
+
+        if txt_list[0].y_pos > self.end_target:
+            for t in txt_list:
+                t.y_pos -= 10
+        txt_list[0].draw(screen, f"Congratulations Mr Minister:")
+        txt_list[1].draw(screen, f"   Passengers transported: {setting.passengers}")
+        txt_list[2].draw(screen, f"   Trains crashed: {setting.crashes}")
+        txt_list[3].draw(screen, f"   Stops used: {setting.freezes}")
+        txt_list[4].draw(screen, f"   Speed boosts used: {setting.speedys}")
+
+        if setting.passengers >= 20000 and setting.crashes <= 6:
+            setting.elections_won = 1
+
+        txt_list[5].draw(screen, f"   Elections won: {setting.elections_won}")
+        txt_list[6].draw(screen, f"{setting.end_txts[setting.elections_won]}")
+        
 
 
             

@@ -6,6 +6,8 @@ class Train:
     def __init__(self, image, route, start = 0):
         self.x_pos = route.points[start][0]
         self.y_pos = route.points[start][1]
+        self.start_x_pos = self.x_pos
+        self.start_y_pos = self.y_pos
         self.route = route
         self.loop = route.loop
 
@@ -58,12 +60,13 @@ class Train:
             ###this code handels freezing the train
             if self.frozen == True:
                 if setting.game_speed > 0:
-                    froze_ticks = (pygame.time.get_ticks() - self.f_tick_timer) // (setting.game_speed* 1000)
+                    froze_ticks = (pygame.time.get_ticks() - self.f_tick_timer) // (1000/setting.game_speed)
                     self.multi = 0
                     self.RECT_COLOUR = self.FROZE_COLOUR
                     if froze_ticks > 2:
                         self.multi = 1
                         self.frozen = False
+                        setting.freezes += 1
                         self.RECT_COLOUR = self.NORMAL_COLOUR
                 
                     
@@ -73,12 +76,13 @@ class Train:
             ###this is for speeding
             if self.speedy == True:
                 if setting.game_speed > 0:
-                    froze_ticks = (pygame.time.get_ticks() - self.s_tick_timer) // (setting.game_speed *1000)
+                    froze_ticks = (pygame.time.get_ticks() - self.s_tick_timer) // (1000/setting.game_speed)
                     self.multi = 2
                     self.RECT_COLOUR = self.SPEEDY_COLOUR
                     if froze_ticks > 2:
                         self.multi = 1
                         self.speedy = False
+                        setting.speedys += 1
                         self.RECT_COLOUR = self.NORMAL_COLOUR
                     
                     
@@ -174,6 +178,17 @@ class Train:
             pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size_width, 15))
             self.col_rect = pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width)
             self.x_pos += 30
+    
+    def refresh(self):
+        self.alive = True
+        self.x_pos = self.start_x_pos
+        self.y_pos = self.start_y_pos
+        self.going = True
+        self.timer = 0
+        self.prev_dest = 0
+        self.dest = 1 # self = self, dest = destination
+        self.forward = True
+        
         
 
 class Stations:
@@ -250,7 +265,7 @@ class Route:
     def draw(self, screen):
         for l in range(len(self.points)):
             ###the circles give rounded edges to the corners and edges of the lines
-            pygame.draw.circle(screen, self.colour, (self.points[l]), 5)
+            
 
             if l+1 < len(self.points):
                 if self.points[l][0] == self.points[l+1][0] or self.points[l][1] == self.points[l+1][1]:
@@ -263,6 +278,9 @@ class Route:
                    
             if self.loop == True:
                 pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
+
+            pygame.draw.circle(screen, self.colour, (self.points[l]), 15)
+            pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
 
     def check_overlap(self, route_2) -> list:
 

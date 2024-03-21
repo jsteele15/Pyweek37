@@ -8,15 +8,14 @@ from ents import*
 from settings import*
 
 
-
 def main():
     pygame.init()
 
     pygame.display.set_caption("Thomas the Minister of Transportation")
     
     ###adds an icon
-    #icon = pygame.image.load("../res/icon.png")
-    #pygame.display.set_icon(icon)   
+    icon = pygame.image.load("../res/buildings2.png")
+    pygame.display.set_icon(icon)   
 
     setting = Settings()
     screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT))
@@ -34,6 +33,13 @@ def main():
 
     score = LevelText( 30, 10, 0)
     date_txt = LevelText( 30, setting.WIDTH/2 - 75, setting.HEIGHT/setting.HEIGHT)
+
+    stop_but = Buttons(pause_func,[setting.WIDTH - 170, 5], (100, 100))
+    norm_but = Buttons(norm_func,[setting.WIDTH - 100, 5], (100, 100))
+    double_but = Buttons(double_func,[setting.WIDTH - 50, 5], (100, 100))
+    
+    
+
     end_txt = LevelText( 50, setting.WIDTH/2 - 250, setting.HEIGHT/2)
     under_txt = LevelText( 20, 20, setting.HEIGHT - 90, colour=(255, 255, 255))
     
@@ -47,6 +53,17 @@ def main():
     lt_8 = LevelText( 25, 40, 105)
     lt_9 = LevelText( 25, 40, 50)
     lt_4 = LevelText( 30, setting.WIDTH - 250, setting.HEIGHT/2- 100,(255, 255, 255)) #
+
+    ###end scene txt
+    end_1 = LevelText(25, 50, setting.HEIGHT + 50)
+    end_2 = LevelText(25, 50, setting.HEIGHT +100)
+    end_3 = LevelText(25, 50, setting.HEIGHT +150)
+    end_4 = LevelText(25, 50, setting.HEIGHT +200)
+    end_5 = LevelText(25, 50, setting.HEIGHT +250)
+    end_6 = LevelText(25, 50, setting.HEIGHT +300)
+    end_7 = LevelText(25, 50, setting.HEIGHT +setting.HEIGHT - 150 )
+    end_txts = [end_1, end_2, end_3, end_4, end_5, end_6, end_7]
+
     #buttons
     play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
     play_target = 50
@@ -55,7 +72,13 @@ def main():
     exit_but = Buttons(exit_func,[setting.WIDTH + 100, setting.HEIGHT/2 - 50], (100, 100))
     next_but = Buttons(next_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
 
-    button_list = [play_but, skip_but, exit_but, next_but]
+
+    ext_but = Buttons(exit_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT - 50], (100, 100))
+    rep_but = Buttons(restart_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
+
+    end_buttons = [rep_but, ext_but]
+    speed_buttons = [stop_but, norm_but, double_but]
+    button_list = [play_but, skip_but, exit_but, next_but, stop_but, norm_but, double_but, rep_but, ext_but]
 
     ###to control the time of day
     start_time = pygame.time.get_ticks()
@@ -161,8 +184,12 @@ def main():
     mar_fired = False
     apr_fired = False
 
-    route_list = [r2, r3]
-    train_list = [train2, train3]
+    setting.starter_r_1 = r2
+    setting.starter_r_2 = r3
+    setting.starter_t_1 = train2
+    setting.starter_t_2 = train3
+    setting.route_list = [r2, r3]
+    setting.train_list = [train2, train3]
 
     ###to scale the image
     ###could use three scaled images to change based on the zoom if we get to that
@@ -183,7 +210,7 @@ def main():
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background        
-        actions(setting, train_list, button_list, tutorial_list_trains)
+        actions(setting, setting.train_list, button_list, tutorial_list_trains)
         
         if setting.state == "main_menu":
             play_but.draw(screen, "PLAY", setting)
@@ -232,21 +259,19 @@ def main():
             
             pygame.draw.rect(screen, (200, 200, 200), pygame.Rect((0, 0), (setting.day_counter, 40 )))
             
+            for r in range(len(setting.route_list)):
+                setting.route_list[r].draw(screen)
 
-            for r in range(len(route_list)):
-                route_list[r].draw(screen)
-
-            for t in range(len(train_list)):
-                train_list[t].move(setting, screen)
-
+            for t in range(len(setting.train_list)):
+                setting.train_list[t].move(setting, screen)
 
             ###this code iterates over the list of trains and works out if theyve collided. And sets their alive property to false. A little animation can be played then 
-            for i in range(len(train_list)):
-                for j in range(i + 1, len(train_list)):
-                    if train_list[i].col_rect.colliderect(train_list[j].col_rect) and train_list[i].alive and train_list[j].alive:
-                        train_list[i].alive = False
-                        train_list[j].alive = False
-
+            for i in range(len(setting.train_list)):
+                for j in range(i + 1, len(setting.train_list)):
+                    if setting.train_list[i].col_rect.colliderect(setting.train_list[j].col_rect) and setting.train_list[i].alive and setting.train_list[j].alive:
+                        setting.crashes += 2
+                        setting.train_list[i].alive = False
+                        setting.train_list[j].alive = False
 
             #timer for the progression of the months, i have a rudementary function in the ui
             #.py. but its not working as intended, will come back to
@@ -258,40 +283,40 @@ def main():
                     if setting.day_counter >= setting.WIDTH:
                         if setting.months[setting.month] == "Nov" and nov_fired == False:
                             for i in range(len(nov_list)):
-                                route_list.append(nov_list[i][0])
-                                train_list.append(nov_list[i][1])
+                                setting.route_list.append(nov_list[i][0])
+                                setting.train_list.append(nov_list[i][1])
                                 nov_fired = True
                             #setting.month += 1
                             #start_time = pygame.time.get_ticks()
 
                         if setting.months[setting.month] == "Dec" and dec_fired == False:
                             for i in range(len(dec_list)):
-                                route_list.append(dec_list[i][0])
-                                train_list.append(dec_list[i][1])
+                                setting.route_list.append(dec_list[i][0])
+                                setting.train_list.append(dec_list[i][1])
                                 dec_fired = True
 
                         if setting.months[setting.month] == "Jan" and jan_fired == False:
                             for i in range(len(jan_list)):
-                                route_list.append(jan_list[i][0])
-                                train_list.append(jan_list[i][1])
+                                setting.route_list.append(jan_list[i][0])
+                                setting.train_list.append(jan_list[i][1])
                                 dec_fired = True
 
                         if setting.months[setting.month] == "Feb" and feb_fired == False:
                             for i in range(len(feb_list)):
-                                route_list.append(feb_list[i][0])
-                                train_list.append(feb_list[i][1])
+                                setting.route_list.append(feb_list[i][0])
+                                setting.train_list.append(feb_list[i][1])
                                 dec_fired = True
                 
                         if setting.months[setting.month] == "Mar" and mar_fired == False:
                             for i in range(len(mar_list)):
-                                route_list.append(mar_list[i][0])
-                                train_list.append(mar_list[i][1])
+                                setting.route_list.append(mar_list[i][0])
+                                setting.train_list.append(mar_list[i][1])
                                 dec_fired = True
 
                         if setting.months[setting.month] == "April" and apr_fired == False:
                             for i in range(len(apr_list)):
-                                route_list.append(apr_list[i][0])
-                                train_list.append(apr_list[i][1])
+                                setting.route_list.append(apr_list[i][0])
+                                setting.train_list.append(apr_list[i][1])
                                 dec_fired = True
                             
                             #setting.month += 1
@@ -300,11 +325,12 @@ def main():
 
 
                         if setting.months[setting.month] == "May":
-                            for i in range(len(train_list)):
-                                train_list[i].alive = False
+                            for i in range(len(setting.train_list)):
+                                setting.train_list[i].alive = False
 
                             screen.fill((255, 255, 255))
                             end_txt.draw(screen, f"YOUR WIFE LEFT YOU =D")
+                            setting.state = "end"
 
                         if setting.months[setting.month] != "May":
                             
@@ -327,9 +353,14 @@ def main():
             score.draw(screen, f"PASSENGERS: {setting.passengers}")
             date_txt.draw(screen, f"DATE: {setting.months[setting.month]}")
             under_txt.draw(screen, f"UNDERGROUND")
+            stop_but.draw(screen, "II", setting)
+            norm_but.draw(screen, ">", setting)
+            double_but.draw(screen, ">>", setting)
 
+            speed_buttons_change(setting, speed_buttons)
             
-            
+        if setting.state == "end":
+            cutscene.end_scene(setting, screen, end_txts, end_buttons)
       
 
         pygame.display.update()

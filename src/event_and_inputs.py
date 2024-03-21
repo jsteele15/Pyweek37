@@ -14,7 +14,36 @@ def exit_func(setting):
 def next_func(setting):
     setting.txt_state += 1
 
+def pause_func(setting):
+    setting.game_speed_ind = 0
+    setting.SPEED = setting.speeds[setting.game_speed_ind]
+    setting.game_speed = setting.speeds[setting.game_speed_ind]
 
+def norm_func(setting):
+    setting.game_speed_ind = 1
+    setting.SPEED = setting.speeds[setting.game_speed_ind]
+    setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+def double_func(setting):
+    setting.game_speed_ind = 2
+    setting.SPEED = setting.speeds[setting.game_speed_ind]
+    setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+def restart_func(setting):
+    setting.month = 0
+    setting.passengers = 0
+    setting.crashes = 0
+    setting.freezes = 0
+    setting.speedys = 0
+    setting.elections_won = 0
+    for t in setting.train_list:
+        t.refresh()
+
+    setting.route_list = [setting.starter_r_1, setting.starter_r_2]
+    setting.train_list = [setting.starter_t_1, setting.starter_t_2]
+    setting.day_counter = setting.stored_counter
+    setting.state = "game"
+    
 
 def actions(setting, train_list, button_list, tutorial_list):
 
@@ -41,6 +70,18 @@ def actions(setting, train_list, button_list, tutorial_list):
                     setting.game_speed_ind -= 1
                     setting.SPEED = setting.speeds[setting.game_speed_ind]
                     setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+            if event.key == K_SPACE:
+                if setting.game_speed_ind == 0:
+                    setting.game_speed_ind = 1
+                    setting.SPEED = setting.speeds[setting.game_speed_ind]
+                    setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+                if setting.game_speed_ind >= 1:
+                    setting.game_speed_ind = 0
+                    setting.SPEED = setting.speeds[setting.game_speed_ind]
+                    setting.game_speed = setting.speeds[setting.game_speed_ind]
+
 
 
         if event.type == MOUSEBUTTONDOWN:
