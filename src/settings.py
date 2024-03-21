@@ -52,4 +52,10 @@ class Settings():
     train_list = []
     clock = pygame.time.Clock()
 
+    ##to reset the particle affects
+    part = []
+
+    ##to reset the months firing
+    fired_list = []
+
 

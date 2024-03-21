@@ -184,6 +184,8 @@ def main():
     mar_fired = False
     apr_fired = False
 
+    setting.fired_list = [nov_fired, dec_fired, jan_fired, feb_fired, mar_fired, apr_fired]
+
     setting.starter_r_1 = r2
     setting.starter_r_2 = r3
     setting.starter_t_1 = train2
@@ -207,6 +209,10 @@ def main():
     
     setting.day_counter = setting.WIDTH/12
     setting.stored_counter = setting.WIDTH/12
+
+    setting.part = [Particles([100, 100]), Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100])]
+    
+
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background        
@@ -263,8 +269,9 @@ def main():
                 setting.route_list[r].draw(screen)
 
             for t in range(len(setting.train_list)):
-                setting.train_list[t].move(setting, screen)
+                setting.train_list[t].move(setting, screen, particles = setting.part[t])
 
+            #part.explosion(screen, [100, 100])
             ###this code iterates over the list of trains and works out if theyve collided. And sets their alive property to false. A little animation can be played then 
             for i in range(len(setting.train_list)):
                 for j in range(i + 1, len(setting.train_list)):
@@ -272,6 +279,8 @@ def main():
                         setting.crashes += 2
                         setting.train_list[i].alive = False
                         setting.train_list[j].alive = False
+                        #[setting.train_list[i].x_pos,setting.train_list[i].y_pos])
+
 
             #timer for the progression of the months, i have a rudementary function in the ui
             #.py. but its not working as intended, will come back to
@@ -299,25 +308,25 @@ def main():
                             for i in range(len(jan_list)):
                                 setting.route_list.append(jan_list[i][0])
                                 setting.train_list.append(jan_list[i][1])
-                                dec_fired = True
+                                jan_fired = True
 
                         if setting.months[setting.month] == "Feb" and feb_fired == False:
                             for i in range(len(feb_list)):
                                 setting.route_list.append(feb_list[i][0])
                                 setting.train_list.append(feb_list[i][1])
-                                dec_fired = True
+                                feb_fired = True
                 
                         if setting.months[setting.month] == "Mar" and mar_fired == False:
                             for i in range(len(mar_list)):
                                 setting.route_list.append(mar_list[i][0])
                                 setting.train_list.append(mar_list[i][1])
-                                dec_fired = True
+                                mar_fired = True
 
                         if setting.months[setting.month] == "April" and apr_fired == False:
                             for i in range(len(apr_list)):
                                 setting.route_list.append(apr_list[i][0])
                                 setting.train_list.append(apr_list[i][1])
-                                dec_fired = True
+                                apr_fired = True
                             
                             #setting.month += 1
                             #start_time = pygame.time.get_ticks()

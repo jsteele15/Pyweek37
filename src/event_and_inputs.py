@@ -42,7 +42,16 @@ def restart_func(setting):
     setting.route_list = [setting.starter_r_1, setting.starter_r_2]
     setting.train_list = [setting.starter_t_1, setting.starter_t_2]
     setting.day_counter = setting.stored_counter
+
+    for f in setting.fired_list:
+        f = False
+
+    for i in setting.part:
+        i.refresh()
+
     setting.state = "game"
+
+
     
 
 def actions(setting, train_list, button_list, tutorial_list):

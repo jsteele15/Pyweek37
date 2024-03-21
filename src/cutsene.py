@@ -1,4 +1,5 @@
 import pygame
+import random
 from pathlib import Path
 from spritesheet import*
 
@@ -159,7 +160,77 @@ class CutScene:
         txt_list[6].draw(screen, f"{setting.end_txts[setting.elections_won]}")
         
 
+class Particles:
+    def __init__(self, pos):
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+        self.origin_x = pos[0]
+        self.origin_y = pos[1]
+        self.size = 20
+
+
+        self.directions = []
+        
+        #self.directions = [[0,2],[2, 2], [-2, 2], [-2, 0], [2, 0], [0, -2], [2, -2], [-2, -2]]
+        self.rect_pos = []
+        self.rect_sizes = []
+        self.rects = []
+        #for i in range(len(self.rects)):
+            #self.directions.append([random.randint(-2, 2), random.randint(-2, 2)])
+        self.created = False
+
+
+    def explosion(self, screen, pos):
+        if self.created == False:
+            self.x_pos = pos[0]
+            self.y_pos = pos[1]
+            self.origin_x = pos[0]
+            self.origin_y = pos[1]
+
+            self.rect_pos = [(self.x_pos, self.y_pos)]*16
+            self.rect_sizes = [(self.size, self.size)]*16
+            self.rects = [pygame.Rect(posi, size) for posi, size in zip(self.rect_pos, self.rect_sizes)]
+            for i in range(len(self.rects)):
+                self.directions.append([random.randint(-2, 2), random.randint(-2, 2)])
+
+            self.created = True
+            
+        if self.size > 0:
+            #
+            #ffc071	(255,192,113)
+            #ffa255	
+            #ff5b14	(255,91,20)
+            #ff2323	(255,35,35)
+            for rect in self.rects:
+                if self.size >= 20:
+                    pygame.draw.rect(screen, (254,255,181), rect)
+
+                if self.size >=14 and self.size < 20:
+                    pygame.draw.rect(screen, (255,162,85), rect)
+                
+                if self.size >= 5 and self.size < 14:
+                    pygame.draw.rect(screen, (255,35,35), rect)
+
+                if self.size <= 4:
+                    pygame.draw.rect(screen, (0, 0, 0), rect)
+                
+                self.size -= 0.03
+                rect[2] = self.size
+                rect[3] = self.size
+
+            for r in range(len(self.rects)):
+                self.rects[r][0] += self.directions[r][0]
+                self.rects[r][1] += self.directions[r][1]
+        
+
+    
+    def refresh(self):
+        self.created = False
+        self.size = 26
+
+
+
+
+
 
             
-
-

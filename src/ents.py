@@ -53,7 +53,7 @@ class Train:
         
         self.sprite = SpriteSheet(0, 0, 0, 0, 0, 0)
     
-    def move(self, setting, screen):
+    def move(self, setting, screen, particles = None):
         ###thisll work if the train hasnt crashed
         if self.alive == True:
 
@@ -175,9 +175,8 @@ class Train:
             self.col_rect = pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width)
 
         else:
-            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size_width, 15))
-            self.col_rect = pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width)
-            self.x_pos += 30
+
+            particles.explosion(screen, [self.x_pos, self.y_pos])
     
     def refresh(self):
         self.alive = True
