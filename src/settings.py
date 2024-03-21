@@ -39,7 +39,7 @@ class Settings():
                 "In the most train focused election in British history, \nwe came out victorious. You now get to do this for the next \nfive years, we're so sorry!"]
     ###a state to control whats playing
     #[main_menu, cut_scene, game, end]
-    state = "game"
+    state = "main_menu"
     #1 or 2
     txt_state = 1
     

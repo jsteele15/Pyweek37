@@ -10,6 +10,8 @@ from settings import*
 
 def main():
     pygame.init()
+    track = Music_Sound(0, "../res/backing_track.wav")
+    track.load()
 
     pygame.display.set_caption("Thomas the Minister of Transportation")
     
@@ -52,6 +54,7 @@ def main():
 
     lt_8 = LevelText( 25, 40, 105)
     lt_9 = LevelText( 25, 40, 50)
+    lt_10 = LevelText( 25, 50, setting.HEIGHT/2)
     lt_4 = LevelText( 30, setting.WIDTH - 250, setting.HEIGHT/2- 100,(255, 255, 255)) #
 
     ###end scene txt
@@ -211,7 +214,7 @@ def main():
     setting.stored_counter = setting.WIDTH/12
 
     setting.part = [Particles([100, 100]), Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100])]
-    
+    track.play()
 
     while setting.RUNNING:
         screen.fill((255, 255, 251))
@@ -252,8 +255,8 @@ def main():
             #skip_but.draw(screen, "SKIP", setting)
         
         if setting.state == "cut_scene":
-            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8, lt_9], [text_sign, speach_sign])
-            if setting.txt_state == 4:
+            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8, lt_9, lt_10], [text_sign, speach_sign], speed_buttons, speed_buttons_change)
+            if setting.txt_state >= 4:
                 for r in range(len(tutorial_list_lines)):
                     tutorial_list_lines[r].draw(screen)
 

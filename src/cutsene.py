@@ -36,7 +36,7 @@ class CutScene:
 
         self.end_target = 50
 
-    def play(self, screen, setting, button_list, text_list, block_list):
+    def play(self, screen, setting, button_list, text_list, block_list, speed_buttons, func_buts):
         screen.blit(self.minister, (0, 0))
         
         
@@ -136,6 +136,19 @@ class CutScene:
                 text_list[7].draw(screen, "     TO STOP THEM                                TO SPEED THEM UP")
 
             if setting.txt_state == 5:
+                button_list[1].refresh()
+                pygame.draw.rect(screen, (255, 255, 255), pygame.Rect((0,0), (2000, 2000)))
+                text_list[8].draw(screen, "Press A to slow down time\nPress D to speed up time\nPress Space to pause ")
+                func_buts(setting, speed_buttons)
+                speed_buttons[0].draw(screen, "II", setting)
+                speed_buttons[1].draw(screen, ">", setting)
+                speed_buttons[2].draw(screen, ">>", setting)
+                button_list[0].draw(screen, "SKIP", setting)
+                button_list[1].draw(screen, "NEXT", setting)
+
+                text_list[9].draw(screen, "DROP OFF 30,000 PASSENGERS OR MORE, \nAND DON'T CRASH MORE THAN 6 TRAINS\nto win the election coming up in May!")
+                
+            if setting.txt_state == 6:
                 setting.state = "game"
 
     def end_scene(self, setting, screen, txt_list, button_list):
@@ -143,6 +156,8 @@ class CutScene:
 
         button_list[0].draw(screen, "REPLAY", setting)
         button_list[1].draw(screen, "EXIT", setting)
+
+        button_list[0].refresh()
 
         if txt_list[0].y_pos > self.end_target:
             for t in txt_list:
@@ -153,7 +168,7 @@ class CutScene:
         txt_list[3].draw(screen, f"   Stops used: {setting.freezes}")
         txt_list[4].draw(screen, f"   Speed boosts used: {setting.speedys}")
 
-        if setting.passengers >= 20000 and setting.crashes <= 6:
+        if setting.passengers >= 30000 and setting.crashes <= 6:
             setting.elections_won = 1
 
         txt_list[5].draw(screen, f"   Elections won: {setting.elections_won}")

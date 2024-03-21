@@ -6,12 +6,14 @@ def play_func(setting):
     setting.state = "cut_scene"
 
 def skip_func(setting):
+    setting.passengers = 0
     setting.state = "game"
 
 def exit_func(setting):
     sys.exit()
 
 def next_func(setting):
+    setting.passengers = 0
     setting.txt_state += 1
 
 def pause_func(setting):

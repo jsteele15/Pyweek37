@@ -9,7 +9,7 @@ class Music_Sound:
         self.file_loc = file_loc
 
     def play(self):
-        name = pygame.mixer.sound(self.file_loc)
+        name = pygame.mixer.Sound(self.file_loc)
 
         ###zero tag means this track will play on loop
         if self.tag == 0:
