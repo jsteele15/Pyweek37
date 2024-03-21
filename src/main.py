@@ -22,7 +22,7 @@ def main():
     screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT))
 
     ###ui stuff
-    bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2, )
+    bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
     behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
     text_sign = Bars(setting.WIDTH + 60, setting.HEIGHT - 180, 760, colour = (0, 37, 144), height = 120)
     speach_sign = Bars( 530, 190, 150, colour = (0, 37, 144), height = 60)
@@ -80,7 +80,7 @@ def main():
     l2_1 = Stations(None, 50, 400)
     l2_2 = Stations(None, 400, 400)
     l2_3 = Stations(None, 400, 50)
-    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True)
+    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = False)
 
     #3rd line
     s1 = Stations(None, 200, 520)
@@ -99,8 +99,9 @@ def main():
     #5th line
     l5_1 = Stations(None, 600, 250)
     l5_2 = Stations(None, 200, 250)
+    l5_3 = Stations(None, 40, 250)
 
-    r5 = Route([l5_1, l5_2], (248, 153, 177))
+    r5 = Route([l5_1, l5_2, l5_3], (248, 153, 177))
     
     #6th line
     l6_1 = Stations(None, 750, 550)
@@ -174,7 +175,11 @@ def main():
     sp_current = setting.HEIGHT +200
     cutscene = CutScene()
 
+    crosses = r2.check_overlap(r5)
+
     
+    setting.day_counter = setting.WIDTH/12
+    setting.stored_counter = setting.WIDTH/12
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background        
@@ -205,6 +210,7 @@ def main():
             if hp_target < sp_current +100:
                 sp_current -= 5
 
+            
             pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        
             pygame.draw.circle(screen, (255, 255, 255), (100, setting.HEIGHT - 85), 50)        
             behind_sign.draw(screen)
@@ -223,6 +229,10 @@ def main():
             
         if setting.state == "game":
             screen.blit(scaled_im, (0, -250))
+            
+            pygame.draw.rect(screen, (200, 200, 200), pygame.Rect((0, 0), (setting.day_counter, 40 )))
+            
+
             for r in range(len(route_list)):
                 route_list[r].draw(screen)
 
@@ -240,76 +250,85 @@ def main():
 
             #timer for the progression of the months, i have a rudementary function in the ui
             #.py. but its not working as intended, will come back to
-            days = (pygame.time.get_ticks() - start_time) // setting.game_speed
+            days = (pygame.time.get_ticks() - start_time) // 1000
             
             ###this 3 represents the number of seconds, we can change that 
-            if days > 3:
+            if days > 1:
+                if setting.game_speed >= 1:
+                    if setting.day_counter >= setting.WIDTH:
+                        if setting.months[setting.month] == "Nov" and nov_fired == False:
+                            for i in range(len(nov_list)):
+                                route_list.append(nov_list[i][0])
+                                train_list.append(nov_list[i][1])
+                                nov_fired = True
+                            #setting.month += 1
+                            #start_time = pygame.time.get_ticks()
+
+                        if setting.months[setting.month] == "Dec" and dec_fired == False:
+                            for i in range(len(dec_list)):
+                                route_list.append(dec_list[i][0])
+                                train_list.append(dec_list[i][1])
+                                dec_fired = True
+
+                        if setting.months[setting.month] == "Jan" and jan_fired == False:
+                            for i in range(len(jan_list)):
+                                route_list.append(jan_list[i][0])
+                                train_list.append(jan_list[i][1])
+                                dec_fired = True
+
+                        if setting.months[setting.month] == "Feb" and feb_fired == False:
+                            for i in range(len(feb_list)):
+                                route_list.append(feb_list[i][0])
+                                train_list.append(feb_list[i][1])
+                                dec_fired = True
                 
-                if setting.months[setting.month] == "Nov" and nov_fired == False:
-                    for i in range(len(nov_list)):
-                        route_list.append(nov_list[i][0])
-                        train_list.append(nov_list[i][1])
-                        nov_fired = True
-                    #setting.month += 1
-                    #start_time = pygame.time.get_ticks()
+                        if setting.months[setting.month] == "Mar" and mar_fired == False:
+                            for i in range(len(mar_list)):
+                                route_list.append(mar_list[i][0])
+                                train_list.append(mar_list[i][1])
+                                dec_fired = True
 
-                if setting.months[setting.month] == "Dec" and dec_fired == False:
-                    for i in range(len(dec_list)):
-                        route_list.append(dec_list[i][0])
-                        train_list.append(dec_list[i][1])
-                        dec_fired = True
+                        if setting.months[setting.month] == "April" and apr_fired == False:
+                            for i in range(len(apr_list)):
+                                route_list.append(apr_list[i][0])
+                                train_list.append(apr_list[i][1])
+                                dec_fired = True
+                            
+                            #setting.month += 1
+                            #start_time = pygame.time.get_ticks()
+                        
 
-                if setting.months[setting.month] == "Jan" and jan_fired == False:
-                    for i in range(len(jan_list)):
-                        route_list.append(jan_list[i][0])
-                        train_list.append(jan_list[i][1])
-                        dec_fired = True
 
-                if setting.months[setting.month] == "Feb" and feb_fired == False:
-                    for i in range(len(feb_list)):
-                        route_list.append(feb_list[i][0])
-                        train_list.append(feb_list[i][1])
-                        dec_fired = True
-        
-                if setting.months[setting.month] == "Mar" and mar_fired == False:
-                    for i in range(len(mar_list)):
-                        route_list.append(mar_list[i][0])
-                        train_list.append(mar_list[i][1])
-                        dec_fired = True
+                        if setting.months[setting.month] == "May":
+                            for i in range(len(train_list)):
+                                train_list[i].alive = False
 
-                if setting.months[setting.month] == "April" and apr_fired == False:
-                    for i in range(len(apr_list)):
-                        route_list.append(apr_list[i][0])
-                        train_list.append(apr_list[i][1])
-                        dec_fired = True
+                            screen.fill((255, 255, 255))
+                            end_txt.draw(screen, f"YOUR WIFE LEFT YOU =D")
+
+                        if setting.months[setting.month] != "May":
+                            
+                            setting.month += 1
+                            setting.day_counter -= setting.WIDTH
+                            start_time = pygame.time.get_ticks()
+                    else:
+                        setting.day_counter += (setting.stored_counter*setting.SPEED)
+                        start_time = pygame.time.get_ticks()
                     
-                    #setting.month += 1
-                    #start_time = pygame.time.get_ticks()
-                
 
-
-                if setting.months[setting.month] == "May":
-                    for i in range(len(train_list)):
-                        train_list[i].alive = False
-
-                    screen.fill((255, 255, 255))
-                    end_txt.draw(screen, f"YOUR WIFE LEFT YOU =D")
-
-                if setting.months[setting.month] != "May":
-                    
-                    setting.month += 1
-                    start_time = pygame.time.get_ticks()
-
-
+            for i in crosses:
+                pygame.draw.circle(screen, (0,0,0), i, 10)
 
             #draw the ui
             pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        
             pygame.draw.circle(screen, (255, 255, 255), (100, setting.HEIGHT - 85), 50)        
-            bar.draw(screen)
+            #bar.draw(screen)
             behind_sign.draw(screen)
             score.draw(screen, f"PASSENGERS: {setting.passengers}")
             date_txt.draw(screen, f"DATE: {setting.months[setting.month]}")
             under_txt.draw(screen, f"UNDERGROUND")
+
+            
             
       
 

@@ -57,26 +57,29 @@ class Train:
 
             ###this code handels freezing the train
             if self.frozen == True:
-                froze_ticks = (pygame.time.get_ticks() - self.f_tick_timer) // setting.game_speed
-                self.multi = 0
-                self.RECT_COLOUR = self.FROZE_COLOUR
-                if froze_ticks > 2:
-                    self.multi = 1
-                    self.frozen = False
-                    self.RECT_COLOUR = self.NORMAL_COLOUR
+                if setting.game_speed > 0:
+                    froze_ticks = (pygame.time.get_ticks() - self.f_tick_timer) // (setting.game_speed* 1000)
+                    self.multi = 0
+                    self.RECT_COLOUR = self.FROZE_COLOUR
+                    if froze_ticks > 2:
+                        self.multi = 1
+                        self.frozen = False
+                        self.RECT_COLOUR = self.NORMAL_COLOUR
+                
                     
             if self.frozen == False:
                 self.f_tick_timer = pygame.time.get_ticks()
 
             ###this is for speeding
             if self.speedy == True:
-                froze_ticks = (pygame.time.get_ticks() - self.s_tick_timer) // setting.game_speed
-                self.multi = 2
-                self.RECT_COLOUR = self.SPEEDY_COLOUR
-                if froze_ticks > 2:
-                    self.multi = 1
-                    self.speedy = False
-                    self.RECT_COLOUR = self.NORMAL_COLOUR
+                if setting.game_speed > 0:
+                    froze_ticks = (pygame.time.get_ticks() - self.s_tick_timer) // (setting.game_speed *1000)
+                    self.multi = 2
+                    self.RECT_COLOUR = self.SPEEDY_COLOUR
+                    if froze_ticks > 2:
+                        self.multi = 1
+                        self.speedy = False
+                        self.RECT_COLOUR = self.NORMAL_COLOUR
                     
                     
             if self.speedy == False:
@@ -261,26 +264,96 @@ class Route:
             if self.loop == True:
                 pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
 
-    def check_overlap(self, route_2):
-        pass
-        """for s in range(len(self.stations)):
+    def check_overlap(self, route_2) -> list:
+
+        cross_list = []
+
+        for s in range(len(self.stations)):
+            x1 = self.stations[s].x_pos
+            y1 = self.stations[s].y_pos
+            x1_d = 0
+            y1_d = 0
+
+            if s+1 >= len(self.stations):
+                continue
+
+            if self.stations[s].x_pos != self.stations[s+1].x_pos and self.stations[s].y_pos != self.stations[s+1].y_pos: #check if straight x
+                continue
+
+            if self.stations[s].y_pos < self.stations[s+1].y_pos:
+                y1_d = 1
+                x1_d = 0   
+            elif self.stations[s].y_pos > self.stations[s+1].y_pos:
+                y1_d = -1
+                x1_d = 0
+
+            if self.stations[s].x_pos < self.stations[s+1].x_pos:
+                y1_d = 0
+                x1_d = 1   
+            elif self.stations[s].x_pos > self.stations[s+1].x_pos:
+                y1_d = 0
+                x1_d = -1
+
             for s2 in range(len(route_2.stations)):
-                if self.stations[s+1] < len(self.stations) and route_2.stations[s2+1] < len(route_2.stations):
-                    x = self.stations[s].x_pos
-                    y = self.stations[s].y_pos
+                x2 = route_2.stations[s2].x_pos
+                y2 = route_2.stations[s2].y_pos
+                x2_d = 0
+                y2_d = 0
+                 
+                if s2+1 >= len(route_2.stations):
+                    continue
+                 
+                if route_2.stations[s2].y_pos != route_2.stations[s2+1].y_pos and route_2.stations[s2].x_pos != route_2.stations[s2+1].x_pos:
+                    continue
+                
+               # print(f"x:{route_2.stations[s2].x_pos}, y: {route_2.stations[s2].y_pos}")
+              #  print(f"x2:{route_2.stations[s2+1].x_pos}, y2: {route_2.stations[s2+1].y_pos}")
+                if route_2.stations[s2].y_pos < route_2.stations[s2+1].y_pos:
+                    y2_d = 1
+                    x2_d = 0   
+                elif route_2.stations[s2].y_pos > route_2.stations[s2+1].y_pos:
+                    y2_d = -1
+                    x2_d = 0
 
-                    while x != self.stations[s+1].x_pos and y != self.stations[s+1].y_pos:
-                        if self.stations[s+1].x_pos > self.stations[s].x_pos:
-                            x += 1
+                if route_2.stations[s2].x_pos < route_2.stations[s2+1].x_pos:
+                    y2_d = 0
+                    x2_d = 1   
+                elif route_2.stations[s2].x_pos > route_2.stations[s2+1].x_pos:
+                    y2_d = 0
+                    x2_d = -1
 
-                        elif self.stations[s+1].x_pos < self.stations[s].x_pos:
-                            x -= 1
+                
 
-                        if self.stations[s+1].y_pos > self.stations[s].y_pos:
-                            y += 1
-                            
-                        elif self.stations[s+1].y_pos < self.stations[s].y_pos:
-                            y -= 1"""
+
+                c1 = 0
+                while x1 != self.stations[s+1].x_pos or y1 != self.stations[s+1].y_pos:
+                    x2 = route_2.stations[s2].x_pos
+                    y2 = route_2.stations[s2].y_pos
+                    if c1 > 2000:
+                        break
+                    c1 += 1
+                    
+                    c2 = 0
+                    print(f"d x: {x1}, y: {y1}\n")
+                    while x2 != route_2.stations[s2+1].x_pos or y2 != route_2.stations[s2+1].y_pos:
+                        if c2 > 2000:
+                            break
+                        c2 += 1
+                        if x1 == x2 and y1 == y2:
+                            cross = (x1, y1)
+                            cross_list.append(cross)
+
+                        x2 += x2_d
+                        y2 += y2_d
+
+                    x1 += x1_d
+                    y1 += y1_d
+
+    
+        return cross_list
+
+
+                        
 
 
 

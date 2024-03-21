@@ -30,6 +30,19 @@ def actions(setting, train_list, button_list, tutorial_list):
                 setting.RUNNING = False
                 sys.exit()
 
+            if event.key == K_d:
+                if setting.game_speed_ind < 2:
+                    setting.game_speed_ind += 1
+                    setting.SPEED = setting.speeds[setting.game_speed_ind]
+                    setting.game_speed = setting.speeds[setting.game_speed_ind]
+            
+            if event.key == K_a:
+                if setting.game_speed_ind > 0:
+                    setting.game_speed_ind -= 1
+                    setting.SPEED = setting.speeds[setting.game_speed_ind]
+                    setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
                 ###if the left mouse button is clicked on the train the train freezes
