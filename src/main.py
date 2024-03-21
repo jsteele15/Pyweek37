@@ -10,9 +10,21 @@ from settings import*
 
 def main():
     pygame.init()
+    pygame.mixer.init()
     track = Music_Sound(0, "../res/backing_track.wav")
-    track.load()
+    answering_machine = Music_Sound(1, "../res/Answering machine sound.wav")
+    cheering = Music_Sound(1, "../res/Cheering sound.wav")
+    click = Music_Sound(1, "../res/Click sound.wav", 0.1)
+    train_const = Music_Sound(1, "../res/Construction of train line sound.wav")
+    constru = Music_Sound(1, "../res/Construction sound.wav")
+    explo = Music_Sound(1, "../res/Explosion sound.wav")
+    train_sound = Music_Sound(1, "../res/Train Sound.wav")
 
+    track.load()
+    track_list = [track, answering_machine, cheering, click, train_const, constru, explo, train_sound]
+    for tl in track_list:
+        tl.load()
+    
     pygame.display.set_caption("Thomas the Minister of Transportation")
     
     ###adds an icon
@@ -23,11 +35,9 @@ def main():
     screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT))
 
     ###ui stuff
-    bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
     behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
     text_sign = Bars(setting.WIDTH + 60, setting.HEIGHT - 180, 760, colour = (0, 37, 144), height = 120)
     speach_sign = Bars( 530, 190, 150, colour = (0, 37, 144), height = 60)
-    bar = Bars( setting.WIDTH - setting.WIDTH, setting.HEIGHT - setting.HEIGHT , setting.WIDTH *2)
 
     game_title1 = LevelText(60, setting.WIDTH + 100, 10)
     game_title2 = LevelText(60, setting.WIDTH, 70)
@@ -36,9 +46,9 @@ def main():
     score = LevelText( 30, 10, 0)
     date_txt = LevelText( 30, setting.WIDTH/2 - 75, setting.HEIGHT/setting.HEIGHT)
 
-    stop_but = Buttons(pause_func,[setting.WIDTH - 170, 5], (100, 100))
-    norm_but = Buttons(norm_func,[setting.WIDTH - 100, 5], (100, 100))
-    double_but = Buttons(double_func,[setting.WIDTH - 50, 5], (100, 100))
+    stop_but = Buttons(pause_func,[setting.WIDTH - 170, 5], (100, 100),click)
+    norm_but = Buttons(norm_func,[setting.WIDTH - 100, 5], (100, 100),click)
+    double_but = Buttons(double_func,[setting.WIDTH - 50, 5], (100, 100),click)
     
     
 
@@ -68,16 +78,16 @@ def main():
     end_txts = [end_1, end_2, end_3, end_4, end_5, end_6, end_7]
 
     #buttons
-    play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100))
+    play_but = Buttons(play_func,[setting.WIDTH + 50, setting.HEIGHT/2 - 100], (100, 100),click)
     play_target = 50
-    skip_but = Buttons(skip_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
+    skip_but = Buttons(skip_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100),click)
 
-    exit_but = Buttons(exit_func,[setting.WIDTH + 100, setting.HEIGHT/2 - 50], (100, 100))
-    next_but = Buttons(next_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
+    exit_but = Buttons(exit_func,[setting.WIDTH + 100, setting.HEIGHT/2 - 50], (100, 100),click)
+    next_but = Buttons(next_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100),click)
 
 
-    ext_but = Buttons(exit_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT - 50], (100, 100))
-    rep_but = Buttons(restart_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100))
+    ext_but = Buttons(exit_func,[setting.WIDTH /3 + setting.WIDTH /3-50, setting.HEIGHT - 50], (100, 100),click)
+    rep_but = Buttons(restart_func,[setting.WIDTH /3-50, setting.HEIGHT -50], (100, 100),click)
 
     end_buttons = [rep_but, ext_but]
     speed_buttons = [stop_but, norm_but, double_but]
@@ -215,7 +225,7 @@ def main():
 
     setting.part = [Particles([100, 100]), Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100]),Particles([100, 100])]
     track.play()
-
+    
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background        
@@ -282,6 +292,7 @@ def main():
                         setting.crashes += 2
                         setting.train_list[i].alive = False
                         setting.train_list[j].alive = False
+                        explo.play()
                         #[setting.train_list[i].x_pos,setting.train_list[i].y_pos])
 
 
@@ -297,6 +308,7 @@ def main():
                             for i in range(len(nov_list)):
                                 setting.route_list.append(nov_list[i][0])
                                 setting.train_list.append(nov_list[i][1])
+                                
                                 nov_fired = True
                             #setting.month += 1
                             #start_time = pygame.time.get_ticks()
@@ -345,7 +357,7 @@ def main():
                             setting.state = "end"
 
                         if setting.months[setting.month] != "May":
-                            
+                            constru.play()
                             setting.month += 1
                             setting.day_counter -= setting.WIDTH
                             start_time = pygame.time.get_ticks()

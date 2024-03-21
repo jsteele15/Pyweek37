@@ -29,13 +29,15 @@ class LevelText:
   
 
 class Buttons:
-    def __init__(self, func, pos, size, txt_size = 30, speed_butts = 0):
+    def __init__(self, func, pos, size, sound, txt_size = 30, speed_butts = 0):
         self.func = func
         self.pos = pos
         self.txt_size = txt_size
         self.size = size
         self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self.speed_butts = 0
+        self.sound = sound
+
 
         self.clicked = False
         self.once = False
@@ -63,6 +65,7 @@ class Buttons:
         
         if self.hover == True:
             if self.clicked == True and self.once == False:
+                self.sound.play()
                 self.func(change)
                 self.once = True
 

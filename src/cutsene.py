@@ -162,14 +162,19 @@ class CutScene:
         if txt_list[0].y_pos > self.end_target:
             for t in txt_list:
                 t.y_pos -= 10
-        txt_list[0].draw(screen, f"Congratulations Mr Minister:")
+        if setting.passengers >= 30000 and setting.crashes <= 6:
+            setting.elections_won = 1
+            txt_list[0].draw(screen, f"Congratulations Mr Minister:")
+        else:
+            txt_list[0].draw(screen, f"Sad times Mr Minister:")
+
+        
         txt_list[1].draw(screen, f"   Passengers transported: {setting.passengers}")
         txt_list[2].draw(screen, f"   Trains crashed: {setting.crashes}")
         txt_list[3].draw(screen, f"   Stops used: {setting.freezes}")
         txt_list[4].draw(screen, f"   Speed boosts used: {setting.speedys}")
 
-        if setting.passengers >= 30000 and setting.crashes <= 6:
-            setting.elections_won = 1
+        
 
         txt_list[5].draw(screen, f"   Elections won: {setting.elections_won}")
         txt_list[6].draw(screen, f"{setting.end_txts[setting.elections_won]}")
@@ -236,6 +241,7 @@ class Particles:
             for r in range(len(self.rects)):
                 self.rects[r][0] += self.directions[r][0]
                 self.rects[r][1] += self.directions[r][1]
+        
         
 
     

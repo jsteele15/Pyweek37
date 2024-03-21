@@ -33,7 +33,7 @@ class Train:
         self.multi = 1
 
         #for scaling 
-        self.size = 20
+        self.size = 24
         self.size_half = self.size/2
         #i added this width var, to work properly we need to rotate the train as well
         #self.size_width = self.size*3
