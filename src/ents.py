@@ -189,6 +189,33 @@ class Train:
         self.forward = True
         
         
+class crossing:
+    def __init__(self, x_pos, y_pos, vertical: bool = False) -> None:
+        self.sz = 24
+        self.ln_sz = 6
+        self.colour = (0, 10, 60)
+        self.x_pos = x_pos - self.sz/2
+        self.y_pos = y_pos - self.sz/2
+        self.vertical = vertical #allows vertical. If false, only allows horizontal
+        self.hitbox = pygame.Rect(self.x_pos, self.y_pos, self.sz, self.sz)
+
+    def draw(self, surface):
+        if self.vertical:
+            pygame.draw.rect(surface, self.colour, (self.x_pos + 1, self.y_pos, (self.sz - self.ln_sz)/2, self.sz))
+            pygame.draw.rect(surface, self.colour, (self.x_pos + 1 + (self.sz - self.ln_sz)/2 + self.ln_sz , self.y_pos, (self.sz - self.ln_sz)/2, self.sz))
+        else:
+            pygame.draw.rect(surface, self.colour, (self.x_pos, self.y_pos + 1, self.sz, (self.sz - self.ln_sz)/2))
+            pygame.draw.rect(surface, self.colour, (self.x_pos, self.y_pos + 1 + (self.sz - self.ln_sz)/2 + self.ln_sz , self.sz, (self.sz - self.ln_sz)/2))
+
+    def update_col(self, train_list, screen):
+        for t in train_list:
+            if pygame.Rect.colliderect(self.hitbox, t.col_rect):
+                if t.route.points[t.prev_dest][0] == t.route.points[t.dest][0] and self.vertical == False:
+                    t.alive = False
+                    #todo add explosion
+                elif t.route.points[t.prev_dest][1] == t.route.points[t.dest][1] and self.vertical == True:
+                    t.alive = False
+        
 
 class Stations:
     def __init__(self, image, x_pos, y_pos):
@@ -281,11 +308,13 @@ class Route:
             pygame.draw.circle(screen, self.colour, (self.points[l]), 15)
             pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
 
+    
+
     def check_overlap(self, route_2) -> list:
 
         cross_list = []
 
-        for s in range(len(self.stations)):
+        for s in range(0, len(self.stations), 2):
             x1 = self.stations[s].x_pos
             y1 = self.stations[s].y_pos
             x1_d = 0
@@ -311,7 +340,7 @@ class Route:
                 y1_d = 0
                 x1_d = -1
 
-            for s2 in range(len(route_2.stations)):
+            for s2 in range(0, len(route_2.stations), 2):
                 x2 = route_2.stations[s2].x_pos
                 y2 = route_2.stations[s2].y_pos
                 x2_d = 0
@@ -346,19 +375,20 @@ class Route:
                 while x1 != self.stations[s+1].x_pos or y1 != self.stations[s+1].y_pos:
                     x2 = route_2.stations[s2].x_pos
                     y2 = route_2.stations[s2].y_pos
-                    if c1 > 2000:
+                    if c1 > 300:
                         break
                     c1 += 1
                     
                     c2 = 0
                     print(f"d x: {x1}, y: {y1}\n")
                     while x2 != route_2.stations[s2+1].x_pos or y2 != route_2.stations[s2+1].y_pos:
-                        if c2 > 2000:
+                        if c2 > 300:
                             break
                         c2 += 1
                         if x1 == x2 and y1 == y2:
                             cross = (x1, y1)
                             cross_list.append(cross)
+                            return cross_list
 
                         x2 += x2_d
                         y2 += y2_d

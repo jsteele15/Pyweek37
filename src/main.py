@@ -116,7 +116,7 @@ def main():
     l2_1 = Stations(None, 50, 400)
     l2_2 = Stations(None, 400, 400)
     l2_3 = Stations(None, 400, 50)
-    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = False)
+    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True)
 
     #3rd line
     s1 = Stations(None, 200, 520)
@@ -215,10 +215,20 @@ def main():
     hp_current = setting.HEIGHT+200
     hp_target = setting.HEIGHT -150
     sp_current = setting.HEIGHT +200
+    """
+    cross_routes = [r2, r3, r4, r5, r6, r7, r8, r9]
+
+    for i in cross_routes:
+        for j in cross_routes:
+            if i != j:
+                new_crosses = i.check_overlap(j)
+                for k in new_crosses:
+                    setting.cross_list.append(k)
+    """
+
+    #print(r2.check_overlap(r5)) (400, 250)
+    setting.cross_list.append(crossing(400, 250))
     cutscene = CutScene()
-
-    crosses = r2.check_overlap(r5)
-
     
     setting.day_counter = setting.WIDTH/12
     setting.stored_counter = setting.WIDTH/12
@@ -229,7 +239,7 @@ def main():
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background        
-        actions(setting, setting.train_list, button_list, tutorial_list_trains)
+        actions(setting, setting.train_list, button_list, tutorial_list_trains, setting.cross_list)
         
         if setting.state == "main_menu":
             play_but.draw(screen, "PLAY", setting)
@@ -278,11 +288,18 @@ def main():
             
             pygame.draw.rect(screen, (200, 200, 200), pygame.Rect((0, 0), (setting.day_counter, 40 )))
             
-            for r in range(len(setting.route_list)):
-                setting.route_list[r].draw(screen)
+           # for r in range(len(setting.route_list)):
+           #     setting.route_list[r].draw(screen)
+
+            for r in setting.route_list:
+                r.draw(screen)
 
             for t in range(len(setting.train_list)):
                 setting.train_list[t].move(setting, screen, particles = setting.part[t])
+
+            for c in setting.cross_list:
+                c.draw(screen)
+                c.update_col(setting.train_list, screen)
 
             #part.explosion(screen, [100, 100])
             ###this code iterates over the list of trains and works out if theyve collided. And sets their alive property to false. A little animation can be played then 
@@ -314,6 +331,7 @@ def main():
                             #start_time = pygame.time.get_ticks()
 
                         if setting.months[setting.month] == "Dec" and dec_fired == False:
+                            
                             for i in range(len(dec_list)):
                                 setting.route_list.append(dec_list[i][0])
                                 setting.train_list.append(dec_list[i][1])
@@ -336,7 +354,6 @@ def main():
                                 setting.route_list.append(mar_list[i][0])
                                 setting.train_list.append(mar_list[i][1])
                                 mar_fired = True
-
                         if setting.months[setting.month] == "April" and apr_fired == False:
                             for i in range(len(apr_list)):
                                 setting.route_list.append(apr_list[i][0])
@@ -366,8 +383,7 @@ def main():
                         start_time = pygame.time.get_ticks()
                     
 
-            for i in crosses:
-                pygame.draw.circle(screen, (0,0,0), i, 10)
+            
 
             #draw the ui
             pygame.draw.circle(screen, (255, 0, 0), (100, setting.HEIGHT - 85), 70)        

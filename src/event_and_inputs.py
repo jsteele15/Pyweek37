@@ -56,7 +56,7 @@ def restart_func(setting):
 
     
 
-def actions(setting, train_list, button_list, tutorial_list):
+def actions(setting, train_list, button_list, tutorial_list, cross_list):
 
     pos = pygame.mouse.get_pos()
 
@@ -101,6 +101,10 @@ def actions(setting, train_list, button_list, tutorial_list):
                 for t in range(len(train_list)):
                     if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
                         train_list[t].frozen = True
+
+                for c in cross_list:
+                    if c.hitbox.collidepoint(pygame.mouse.get_pos()):
+                        c.vertical = not c.vertical
 
                 for t in range(len(tutorial_list)):
                     if tutorial_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):

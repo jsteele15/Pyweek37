@@ -9,7 +9,6 @@ class Settings():
 
     #for the program to run
     RUNNING = True
-
     
 
     #game speed, for how fast the days go by
@@ -50,6 +49,7 @@ class Settings():
     starter_t_2 = 0
     route_list = []
     train_list = []
+    cross_list = []
     clock = pygame.time.Clock()
 
     ##to reset the particle affects
@@ -57,5 +57,4 @@ class Settings():
 
     ##to reset the months firing
     fired_list = []
-
 
