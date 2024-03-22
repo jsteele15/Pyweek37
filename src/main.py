@@ -32,7 +32,7 @@ def main():
     pygame.display.set_icon(icon)   
 
     setting = Settings()
-    screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT))
+    screen = pygame.display.set_mode((setting.WIDTH, setting.HEIGHT), pygame.FULLSCREEN)
 
     ###ui stuff
     behind_sign = Bars(14, setting.HEIGHT - 100, 169, colour = (0, 37, 144))
@@ -136,6 +136,7 @@ def main():
     l5_1 = Stations(None, 600, 250)
     l5_2 = Stations(None, 200, 250)
     l5_3 = Stations(None, 40, 250)
+    c5 = crossing(400, 250)
 
     r5 = Route([l5_1, l5_2, l5_3], (248, 153, 177))
     
@@ -227,7 +228,6 @@ def main():
     """
 
     #print(r2.check_overlap(r5)) (400, 250)
-    setting.cross_list.append(crossing(400, 250))
     cutscene = CutScene()
     
     setting.day_counter = setting.WIDTH/12
@@ -335,12 +335,14 @@ def main():
                             for i in range(len(dec_list)):
                                 setting.route_list.append(dec_list[i][0])
                                 setting.train_list.append(dec_list[i][1])
+                                setting.cross_list.append(c5)
                                 dec_fired = True
 
                         if setting.months[setting.month] == "Jan" and jan_fired == False:
                             for i in range(len(jan_list)):
                                 setting.route_list.append(jan_list[i][0])
                                 setting.train_list.append(jan_list[i][1])
+                                
                                 jan_fired = True
 
                         if setting.months[setting.month] == "Feb" and feb_fired == False:
