@@ -105,11 +105,11 @@ def main():
 
     tutorial_line_p1_1 = Stations(None, 477, 200)
     tutorial_line_p1_2 = Stations(None, 710, 200)
-    r_t_1 = Route([tutorial_line_p2_1, tutorial_line_p2_2], ((0, 255, 0)))
-    r_t_2 = Route([tutorial_line_p1_1, tutorial_line_p1_2], ((100, 200, 200)))
+    r_t_1 = Route([tutorial_line_p2_1, tutorial_line_p2_2], ((0, 255, 0)), ghost = False)
+    r_t_2 = Route([tutorial_line_p1_1, tutorial_line_p1_2], ((100, 200, 200)), ghost = False)
 
-    t_t_1 =  Train(None, r_t_1)
-    t_t_2 =  Train(None, r_t_2)
+    t_t_1 =  Train(None, r_t_1, ghost = False)
+    t_t_2 =  Train(None, r_t_2, ghost = False)
 
     tutorial_list_lines = [r_t_1, r_t_2]
     tutorial_list_trains = [t_t_1, t_t_2]
@@ -122,13 +122,13 @@ def main():
     tut_2_1 = Stations(None, 380, 250)
     tut_2_2 = Stations(None, 380, 450)
 
-    route_tutorial_cross_1 = Route([tut_l_1, tut_l_2], ((100, 150, 200)))
-    route_tutorial_cross_2 = Route([tut_2_1, tut_2_2], ((200, 255, 0)))
+    route_tutorial_cross_1 = Route([tut_l_1, tut_l_2], ((100, 150, 200)), ghost = False)
+    route_tutorial_cross_2 = Route([tut_2_1, tut_2_2], ((200, 255, 0)), ghost = False)
 
-    cross_train_1 = Train(None, route_tutorial_cross_1)
+    cross_train_1 = Train(None, route_tutorial_cross_1, ghost = False)
     #cross_train_2 = Train(None, route_tutorial_cross_2)
 
-    tutorial_cross = crossing(380, 350)
+    tutorial_cross = crossing(380, 350, ghost = False)
 
     tut_list_lines = [route_tutorial_cross_1, route_tutorial_cross_2]
     tut_list_trains = [cross_train_1]
@@ -152,16 +152,15 @@ def main():
     r3 = Route([s1, s2, s3, l2_3], ghost = False)
 
     #4th line
-    l4_1 = Stations(None, 600, 400)
-    l4_2 = Stations(None, 600, 200)
-    l4_3 = Stations(None, 400, 50)
+    l4_1 = Stations(None, 600, 450)
+    l4_2 = Stations(None, 600, 100)
 
-    r4 = Route([l4_1, l4_2, l4_3], (100, 200, 200))
+    r4 = Route([l4_1, l4_2, l2_3], (100, 200, 200))
 
     #5th line
-    l5_1 = Stations(None, 600, 250)
+    l5_1 = Stations(None, 450, 250)
     l5_2 = Stations(None, 200, 250)
-    l5_3 = Stations(None, 40, 250)
+    l5_3 = Stations(None, 150, 250)
     c5 = crossing(400, 250)
 
     r5 = Route([l5_1, l5_2, l5_3], (248, 153, 177))
@@ -169,8 +168,9 @@ def main():
     #6th line
     l6_1 = Stations(None, 750, 550)
     l6_2 = Stations(None, 750, 150)
-    l6_3 = Stations(None, 406, 150)
-    l6_4 = Stations(None, 406, 550)
+    l6_3 = Stations(None, 500, 150)
+    l6_4 = Stations(None, 500, 550)
+    c6 = crossing(600, 150)
 
     r6 = Route([l6_1, l6_2, l6_3, l6_4, l6_1], (175, 27, 105), loop = True)
     r62 = Route([l6_3, l6_4, l6_1, l6_2, l6_3], (175, 27, 105), loop = True)
@@ -211,8 +211,8 @@ def main():
 
     #list, for months to add to the comlexity
     nov_list = [[r4, train4]]
-    dec_list = [[r5, train5]]
-    jan_list = [[r6, train6], [r62, train62]]
+    dec_list = [[r6, train6], [r62, train62]]
+    jan_list = [[r5, train5]]
     feb_list = [[r7, train7]]
     mar_list = [[r8, train8]]
     apr_list = [[r9, train9]]
@@ -255,7 +255,6 @@ def main():
                     setting.cross_list.append(k)
     """
 
-    #print(r2.check_overlap(r5)) (400, 250)
     cutscene = CutScene()
     
     setting.day_counter = setting.WIDTH/12
@@ -368,7 +367,7 @@ def main():
                                 setting.train_list[-1].ghost = False
                                 setting.route_list.append(dec_list[i][0])
                                 setting.train_list.append(dec_list[i][1])
-                                setting.cross_list.append(c5)
+                                setting.cross_list.append(c6)
                                 
                                 nov_fired = True
                             #setting.month += 1
@@ -376,17 +375,20 @@ def main():
 
                         if setting.months[setting.month] == "Dec" and dec_fired == False:
                             
-                            for i in range(len(dec_list)):
+                            for i in range(len(jan_list)):
                                 setting.route_list[-1].ghost = False
                                 setting.train_list[-1].ghost = False
+                                setting.cross_list[-1].ghost = False
                                 setting.route_list.append(jan_list[i][0])
                                 setting.train_list.append(jan_list[i][1])
+                                setting.cross_list.append(c5)
                                 dec_fired = True
 
                         if setting.months[setting.month] == "Jan" and jan_fired == False:
                             for i in range(len(feb_list)):
                                 setting.route_list[-1].ghost = False
                                 setting.train_list[-1].ghost = False
+                                setting.cross_list[-1].ghost = False
                                 setting.route_list.append(feb_list[i][0])
                                 setting.train_list.append(feb_list[i][1])
                                 jan_fired = True

@@ -83,15 +83,17 @@ def actions(setting, train_list, button_list, tutorial_list, cross_list, tutoria
                     setting.game_speed = setting.speeds[setting.game_speed_ind]
 
             if event.key == K_SPACE:
-                if setting.game_speed_ind == 0:
-                    setting.game_speed_ind = 1
-                    setting.SPEED = setting.speeds[setting.game_speed_ind]
-                    setting.game_speed = setting.speeds[setting.game_speed_ind]
-
                 if setting.game_speed_ind >= 1:
                     setting.game_speed_ind = 0
                     setting.SPEED = setting.speeds[setting.game_speed_ind]
                     setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+                else:
+                    setting.game_speed_ind = 1
+                    setting.SPEED = setting.speeds[setting.game_speed_ind]
+                    setting.game_speed = setting.speeds[setting.game_speed_ind]
+
+                
 
 
 

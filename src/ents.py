@@ -315,6 +315,7 @@ class Route:
     def __init__(self, stations: list, colour: tuple = (255, 0, 0), loop: bool = False, ghost = True) -> None:
         self.stations = stations
         self.colour = colour
+        self.col = colour
         self.ghost = ghost
         self.gray = (210, 210, 210)
         self.loop = loop
@@ -327,6 +328,10 @@ class Route:
                 
     def draw(self, screen):
         for l in range(len(self.points)):
+            if self.ghost:
+                self.colour = self.gray
+            else:
+                self.colour = self.col
             ###the circles give rounded edges to the corners and edges of the lines
             
 
@@ -337,27 +342,18 @@ class Route:
                 else:
                     w = 14 #width on angle
                     #pygame.draw.circle(screen, self.colour, (self.points[l]), 6)
-                if self.ghost:
-                    pygame.draw.line(screen, self.gray, self.points[l], self.points[l+1], w)
-                else:
-                    pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], w)
+         
+                pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], w)
                    
             if self.loop == True:
-                if self.ghost:   
-                    pygame.draw.line(screen, self.gray, self.points[len(self.points)-1], self.points[0], 11)
-                    pygame.draw.circle(screen, self.gray, (self.points[len(self.points) - 1]), 15)
-                    pygame.draw.circle(screen, (255, 255, 255), (self.points[len(self.points) - 1]), 10)
-                else:
-                    pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
-                    pygame.draw.circle(screen, self.colour, (self.points[len(self.points) - 1]), 15)
-                    pygame.draw.circle(screen, (255, 255, 255), (self.points[len(self.points) - 1]), 10)
+                pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
+          
+            for p in self.points:
+                pygame.draw.circle(screen, self.colour, (p[0], p[1]), 8)
+            for s in self.stations:
+                pygame.draw.circle(screen, self.colour, (s.x_pos, s.y_pos), 15)
+                pygame.draw.circle(screen, (255, 255, 255), (s.x_pos, s.y_pos), 10)
 
-            if self.ghost:
-                pygame.draw.circle(screen, self.gray, (self.points[l]), 15)
-                pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
-            else:
-                pygame.draw.circle(screen, self.colour, (self.points[l]), 15)
-                pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
 
     
 
@@ -426,14 +422,14 @@ class Route:
                 while x1 != self.stations[s+1].x_pos or y1 != self.stations[s+1].y_pos:
                     x2 = route_2.stations[s2].x_pos
                     y2 = route_2.stations[s2].y_pos
-                    if c1 > 300:
+                    if c1 > 3000:
                         break
                     c1 += 1
                     
                     c2 = 0
-                    print(f"d x: {x1}, y: {y1}\n")
+                    #print(f"d x: {x1}, y: {y1}\n")
                     while x2 != route_2.stations[s2+1].x_pos or y2 != route_2.stations[s2+1].y_pos:
-                        if c2 > 300:
+                        if c2 > 3000:
                             break
                         c2 += 1
                         if x1 == x2 and y1 == y2:
