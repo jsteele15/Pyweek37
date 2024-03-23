@@ -116,7 +116,7 @@ def main():
     l2_1 = Stations(None, 50, 400)
     l2_2 = Stations(None, 400, 400)
     l2_3 = Stations(None, 400, 50)
-    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True)
+    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True, ghost = True)
 
     #3rd line
     s1 = Stations(None, 200, 520)
@@ -173,7 +173,7 @@ def main():
     r9 = Route([l9_1, l9_2, l9_3, l9_4, l9_5, l9_1], (42, 38, 39))
 
     #trains
-    train2 = Train(None, r2)
+    train2 = Train(None, r2, ghost = False)
     train3 = Train(None, r3)
     train4 = Train(None, r4)
     train5 = Train(None, r5)
@@ -304,7 +304,11 @@ def main():
             #part.explosion(screen, [100, 100])
             ###this code iterates over the list of trains and works out if theyve collided. And sets their alive property to false. A little animation can be played then 
             for i in range(len(setting.train_list)):
+                if setting.train_list[i].ghost:
+                        continue
                 for j in range(i + 1, len(setting.train_list)):
+                    if setting.train_list[j].ghost:
+                        continue
                     if setting.train_list[i].col_rect.colliderect(setting.train_list[j].col_rect) and setting.train_list[i].alive and setting.train_list[j].alive:
                         setting.crashes += 2
                         setting.train_list[i].alive = False

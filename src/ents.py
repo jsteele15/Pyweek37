@@ -3,13 +3,14 @@ import random
 from spritesheet import*
 
 class Train:
-    def __init__(self, image, route, start = 0):
+    def __init__(self, image, route, start = 0, ghost = False):
         self.x_pos = route.points[start][0]
         self.y_pos = route.points[start][1]
         self.start_x_pos = self.x_pos
         self.start_y_pos = self.y_pos
         self.route = route
         self.loop = route.loop
+        self.ghost = ghost
 
         ###to tell the train if its going
         self.going = True
@@ -50,12 +51,19 @@ class Train:
         self.NORMAL_COLOUR = (30, 30, 150)
         self.FROZE_COLOUR = (0, 213, 250)
         self.SPEEDY_COLOUR = (255, 210, 0)
+
+        if self.ghost:
+            gray = (150, 150, 150)
+            self.RECT_COLOUR = gray
+            self.NORMAL_COLOUR = gray
+            self.FROZE_COLOUR = gray
+            self.SPEEDY_COLOUR = gray
         
         self.sprite = SpriteSheet(0, 0, 0, 0, 0, 0)
     
     def move(self, setting, screen, particles = None):
         ###thisll work if the train hasnt crashed
-        if self.alive == True:
+        if self.alive == True and self.ghost == False:
 
             ###this code handels freezing the train
             if self.frozen == True:
@@ -174,9 +182,14 @@ class Train:
             ##sets the collision rect to the current location of the drawn rect
             self.col_rect = pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width)
 
-        else:
+        elif self.alive == False:
 
             particles.explosion(screen, [self.x_pos, self.y_pos])
+
+        elif self.ghost == True:
+            pygame.draw.rect(screen, self.RECT_COLOUR, pygame.Rect(self.x_pos - self.size_half, self.y_pos - self.size_half, self.size, self.size_width))
+
+
     
     def refresh(self):
         self.alive = True
@@ -277,9 +290,11 @@ def get_lines(station1: Stations, station2: Stations) -> tuple:
         
 
 class Route:
-    def __init__(self, stations: list, colour: tuple = (255, 0, 0), loop: bool = False) -> None:
+    def __init__(self, stations: list, colour: tuple = (255, 0, 0), loop: bool = False, ghost = False) -> None:
         self.stations = stations
         self.colour = colour
+        self.ghost = ghost
+        self.gray = (190, 190, 190)
         self.loop = loop
         self.points = []
 
@@ -300,13 +315,27 @@ class Route:
                 else:
                     w = 14 #width on angle
                     #pygame.draw.circle(screen, self.colour, (self.points[l]), 6)
-                pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], w)
+                if self.ghost:
+                    pygame.draw.line(screen, self.gray, self.points[l], self.points[l+1], w)
+                else:
+                    pygame.draw.line(screen, self.colour, self.points[l], self.points[l+1], w)
                    
             if self.loop == True:
-                pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
+                if self.ghost:   
+                    pygame.draw.line(screen, self.gray, self.points[len(self.points)-1], self.points[0], 11)
+                    pygame.draw.circle(screen, self.gray, (self.points[len(self.points) - 1]), 15)
+                    pygame.draw.circle(screen, (255, 255, 255), (self.points[len(self.points) - 1]), 10)
+                else:
+                    pygame.draw.line(screen, self.colour, self.points[len(self.points)-1], self.points[0], 11)
+                    pygame.draw.circle(screen, self.colour, (self.points[len(self.points) - 1]), 15)
+                    pygame.draw.circle(screen, (255, 255, 255), (self.points[len(self.points) - 1]), 10)
 
-            pygame.draw.circle(screen, self.colour, (self.points[l]), 15)
-            pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
+            if self.ghost:
+                pygame.draw.circle(screen, self.gray, (self.points[l]), 15)
+                pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
+            else:
+                pygame.draw.circle(screen, self.colour, (self.points[l]), 15)
+                pygame.draw.circle(screen, (255, 255, 255), (self.points[l]), 10)
 
     
 
