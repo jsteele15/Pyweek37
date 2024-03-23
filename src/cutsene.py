@@ -28,7 +28,9 @@ class CutScene:
         self.state = "call"
         self.size = 30
         
-        
+        ###conditionals for the sounds
+        self.sound_1 = False
+        self.sound_2 = False
 
         self.font = pygame.font.Font(Path(r'../res/LondonTube-MABx.ttf'), self.size)    
         self.text_target = 30
@@ -36,7 +38,7 @@ class CutScene:
 
         self.end_target = 50
 
-    def play(self, screen, setting, button_list, text_list, block_list, speed_buttons, func_buts):
+    def play(self, screen, setting, button_list, text_list, block_list, speed_buttons, func_buts, sound_list):
         screen.blit(self.minister, (0, 0))
         
         
@@ -101,6 +103,9 @@ class CutScene:
         if self.state == "end":
             rotated_image = pygame.transform.rotate(self.sheet_recev.animation_list[self.sheet_recev.ind], self.angle)
             screen.blit(rotated_image, self.recev_loc)
+            if self.sound_1 == False:
+                sound_list[0].play()
+                self.sound_1 = True
             block_list[1].draw(screen)
             block_list[0].draw(screen)
             block_list[0].x_pos -= 10
@@ -145,14 +150,26 @@ class CutScene:
                 speed_buttons[2].draw(screen, ">>", setting)
                 button_list[0].draw(screen, "SKIP", setting)
                 button_list[1].draw(screen, "NEXT", setting)
-
-                text_list[9].draw(screen, "DROP OFF 30,000 PASSENGERS OR MORE, \nAND DON'T CRASH MORE THAN 6 TRAINS\nto win the election coming up in May!")
+                text_list[9].draw(screen, "Right click on crossings to\ntrun them a train \ncan go through \nany crossing facing \nthe same direction\nOtherwise the train \ncrashes!")
+                
                 
             if setting.txt_state == 6:
+                button_list[1].refresh()
+                pygame.draw.rect(screen, (255, 255, 255), pygame.Rect((0,0), (2000, 2000)))
+                
+                text_list[9].draw(screen, "DROP OFF 30,000 PASSENGERS OR MORE, \nAND DON'T CRASH MORE THAN 6 TRAINS\nto win the election coming up in May!")
+                button_list[0].draw(screen, "SKIP", setting)
+                button_list[1].draw(screen, "NEXT", setting)
+
+            if setting.txt_state == 7:
                 setting.state = "game"
 
-    def end_scene(self, setting, screen, txt_list, button_list):
+    def end_scene(self, setting, screen, txt_list, button_list, sound_list):
         screen.blit(self.minister, (200, 0))
+
+        if self.sound_2 == False:
+            sound_list[1].play()
+            self.sound_2 = True
 
         button_list[0].draw(screen, "REPLAY", setting)
         button_list[1].draw(screen, "EXIT", setting)

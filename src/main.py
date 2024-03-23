@@ -24,7 +24,9 @@ def main():
     track_list = [track, answering_machine, cheering, click, train_const, constru, explo, train_sound]
     for tl in track_list:
         tl.load()
-    
+
+    sounds_for_cutscene = [ answering_machine,cheering,]
+
     pygame.display.set_caption("Thomas the Minister of Transportation")
     
     ###adds an icon
@@ -110,6 +112,29 @@ def main():
 
     tutorial_list_lines = [r_t_1, r_t_2]
     tutorial_list_trains = [t_t_1, t_t_2]
+    
+
+
+    tut_l_1 = Stations(None, 280, 350)
+    tut_l_2 = Stations(None, 500, 350)
+
+    tut_2_1 = Stations(None, 380, 250)
+    tut_2_2 = Stations(None, 380, 450)
+
+    route_tutorial_cross_1 = Route([tut_l_1, tut_l_2], ((100, 150, 200)))
+    route_tutorial_cross_2 = Route([tut_2_1, tut_2_2], ((200, 255, 0)))
+
+    cross_train_1 = Train(None, route_tutorial_cross_1)
+    #cross_train_2 = Train(None, route_tutorial_cross_2)
+
+    tutorial_cross = crossing(380, 350)
+
+    tut_list_lines = [route_tutorial_cross_1, route_tutorial_cross_2]
+    tut_list_trains = [cross_train_1]
+
+    tutorial_list_trains_all = [t_t_1, t_t_2, cross_train_1]
+
+
 
     ###second line###
     l2_start = Stations(None, 50, 50)
@@ -239,7 +264,7 @@ def main():
     while setting.RUNNING:
         screen.fill((255, 255, 251))
         ###blitting the background        
-        actions(setting, setting.train_list, button_list, tutorial_list_trains, setting.cross_list)
+        actions(setting, setting.train_list, button_list, tutorial_list_trains_all, setting.cross_list, tutorial_cross)
         
         if setting.state == "main_menu":
             play_but.draw(screen, "PLAY", setting)
@@ -275,14 +300,23 @@ def main():
             #skip_but.draw(screen, "SKIP", setting)
         
         if setting.state == "cut_scene":
-            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8, lt_9, lt_10], [text_sign, speach_sign], speed_buttons, speed_buttons_change)
+            cutscene.play(screen, setting, [skip_but, next_but], [lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8, lt_9, lt_10], [text_sign, speach_sign], speed_buttons, speed_buttons_change, sounds_for_cutscene)
             if setting.txt_state >= 4:
                 for r in range(len(tutorial_list_lines)):
                     tutorial_list_lines[r].draw(screen)
 
                 for t in range(len(tutorial_list_trains)):
                     tutorial_list_trains[t].move(setting, screen)
-            
+                
+            if setting.txt_state >= 5:
+                for l in tut_list_lines:
+                    l.draw(screen)
+                for t in tut_list_trains:
+                    t.move(setting, screen, particles = setting.part[-1])
+                tutorial_cross.draw(screen)
+                tutorial_cross.update_col(tut_list_trains, screen)
+
+
         if setting.state == "game":
             screen.blit(scaled_im, (0, -250))
             
@@ -406,7 +440,7 @@ def main():
             speed_buttons_change(setting, speed_buttons)
             
         if setting.state == "end":
-            cutscene.end_scene(setting, screen, end_txts, end_buttons)
+            cutscene.end_scene(setting, screen, end_txts, end_buttons, sounds_for_cutscene)
       
 
         pygame.display.update()
