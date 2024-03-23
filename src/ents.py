@@ -3,7 +3,7 @@ import random
 from spritesheet import*
 
 class Train:
-    def __init__(self, image, route, start = 0, ghost = False):
+    def __init__(self, image, route, start = 0, ghost = True):
         self.x_pos = route.points[start][0]
         self.y_pos = route.points[start][1]
         self.start_x_pos = self.x_pos
@@ -67,6 +67,11 @@ class Train:
     def move(self, setting, screen, sound_list,particles = None):
         ###thisll work if the train hasnt crashed
         if self.alive == True and self.ghost == False:
+
+            self.RECT_COLOUR = (30, 30, 150)
+            self.NORMAL_COLOUR = (30, 30, 150)
+            self.FROZE_COLOUR = (0, 213, 250)
+            self.SPEEDY_COLOUR = (255, 210, 0)
 
             ###this code handels freezing the train
             if self.frozen == True:
@@ -211,16 +216,23 @@ class Train:
         
         
 class crossing:
-    def __init__(self, x_pos, y_pos, vertical: bool = False) -> None:
+    def __init__(self, x_pos, y_pos, vertical: bool = False, ghost: bool = True) -> None:
         self.sz = 24
         self.ln_sz = 6
         self.colour = (0, 10, 60)
+        self.ghost = ghost
+        self.gray = (150, 150, 150)
         self.x_pos = x_pos - self.sz/2
         self.y_pos = y_pos - self.sz/2
         self.vertical = vertical #allows vertical. If false, only allows horizontal
         self.hitbox = pygame.Rect(self.x_pos, self.y_pos, self.sz, self.sz)
 
     def draw(self, surface):
+
+        if self.ghost:
+            self.colour = self.gray
+        else:
+            self.colour = (0, 10, 60)
         if self.vertical:
             pygame.draw.rect(surface, self.colour, (self.x_pos + 1, self.y_pos, (self.sz - self.ln_sz)/2, self.sz))
             pygame.draw.rect(surface, self.colour, (self.x_pos + 1 + (self.sz - self.ln_sz)/2 + self.ln_sz , self.y_pos, (self.sz - self.ln_sz)/2, self.sz))
@@ -230,6 +242,8 @@ class crossing:
 
     def update_col(self, train_list, screen):
         for t in train_list:
+            if self.ghost:
+                break
             if pygame.Rect.colliderect(self.hitbox, t.col_rect):
                 if t.route.points[t.prev_dest][0] == t.route.points[t.dest][0] and self.vertical == False:
                     t.alive = False
@@ -298,11 +312,11 @@ def get_lines(station1: Stations, station2: Stations) -> tuple:
         
 
 class Route:
-    def __init__(self, stations: list, colour: tuple = (255, 0, 0), loop: bool = False, ghost = False) -> None:
+    def __init__(self, stations: list, colour: tuple = (255, 0, 0), loop: bool = False, ghost = True) -> None:
         self.stations = stations
         self.colour = colour
         self.ghost = ghost
-        self.gray = (190, 190, 190)
+        self.gray = (210, 210, 210)
         self.loop = loop
         self.points = []
 

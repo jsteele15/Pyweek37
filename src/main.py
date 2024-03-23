@@ -142,14 +142,14 @@ def main():
     l2_1 = Stations(None, 50, 400)
     l2_2 = Stations(None, 400, 400)
     l2_3 = Stations(None, 400, 50)
-    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True, ghost = True)
+    r2 = Route([l2_start, l2_1, l2_2, l2_3], (0, 255, 0), loop = True, ghost = False)
 
     #3rd line
     s1 = Stations(None, 200, 520)
     s2 = Stations(None, 300, 210)
     s3 = Stations(None, 360, 100)
 
-    r3 = Route([s1, s2, s3, l2_3])
+    r3 = Route([s1, s2, s3, l2_3], ghost = False)
 
     #4th line
     l4_1 = Stations(None, 600, 400)
@@ -200,7 +200,7 @@ def main():
 
     #trains
     train2 = Train(None, r2, ghost = False)
-    train3 = Train(None, r3)
+    train3 = Train(None, r3, ghost = False)
     train4 = Train(None, r4)
     train5 = Train(None, r5)
     train6 = Train(None, r6)
@@ -232,6 +232,8 @@ def main():
     setting.starter_t_2 = train3
     setting.route_list = [r2, r3]
     setting.train_list = [train2, train3]
+    setting.route_list.append(nov_list[0][0])
+    setting.train_list.append(nov_list[0][1])
 
     ###to scale the image
     ###could use three scaled images to change based on the zoom if we get to that
@@ -362,8 +364,11 @@ def main():
                     if setting.day_counter >= setting.WIDTH:
                         if setting.months[setting.month] == "Nov" and nov_fired == False:
                             for i in range(len(nov_list)):
-                                setting.route_list.append(nov_list[i][0])
-                                setting.train_list.append(nov_list[i][1])
+                                setting.route_list[-1].ghost = False
+                                setting.train_list[-1].ghost = False
+                                setting.route_list.append(dec_list[i][0])
+                                setting.train_list.append(dec_list[i][1])
+                                setting.cross_list.append(c5)
                                 
                                 nov_fired = True
                             #setting.month += 1
@@ -372,33 +377,38 @@ def main():
                         if setting.months[setting.month] == "Dec" and dec_fired == False:
                             
                             for i in range(len(dec_list)):
-                                setting.route_list.append(dec_list[i][0])
-                                setting.train_list.append(dec_list[i][1])
-                                setting.cross_list.append(c5)
+                                setting.route_list[-1].ghost = False
+                                setting.train_list[-1].ghost = False
+                                setting.route_list.append(jan_list[i][0])
+                                setting.train_list.append(jan_list[i][1])
                                 dec_fired = True
 
                         if setting.months[setting.month] == "Jan" and jan_fired == False:
-                            for i in range(len(jan_list)):
-                                setting.route_list.append(jan_list[i][0])
-                                setting.train_list.append(jan_list[i][1])
-                                
+                            for i in range(len(feb_list)):
+                                setting.route_list[-1].ghost = False
+                                setting.train_list[-1].ghost = False
+                                setting.route_list.append(feb_list[i][0])
+                                setting.train_list.append(feb_list[i][1])
                                 jan_fired = True
 
                         if setting.months[setting.month] == "Feb" and feb_fired == False:
-                            for i in range(len(feb_list)):
-                                setting.route_list.append(feb_list[i][0])
-                                setting.train_list.append(feb_list[i][1])
+                            for i in range(len(mar_list)):
+                                setting.route_list[-1].ghost = False
+                                setting.train_list[-1].ghost = False
+                                setting.route_list.append(mar_list[i][0])
+                                setting.train_list.append(mar_list[i][1])
                                 feb_fired = True
                 
                         if setting.months[setting.month] == "Mar" and mar_fired == False:
-                            for i in range(len(mar_list)):
-                                setting.route_list.append(mar_list[i][0])
-                                setting.train_list.append(mar_list[i][1])
-                                mar_fired = True
-                        if setting.months[setting.month] == "April" and apr_fired == False:
                             for i in range(len(apr_list)):
+                                setting.route_list[-1].ghost = False
+                                setting.train_list[-1].ghost = False
                                 setting.route_list.append(apr_list[i][0])
                                 setting.train_list.append(apr_list[i][1])
+                                mar_fired = True
+                        if setting.months[setting.month] == "April" and apr_fired == False:
+                                setting.route_list[-1].ghost = False
+                                setting.train_list[-1].ghost = False
                                 apr_fired = True
                             
                             #setting.month += 1
