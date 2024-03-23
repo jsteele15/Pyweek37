@@ -56,7 +56,7 @@ def restart_func(setting):
 
     
 
-def actions(setting, train_list, button_list, tutorial_list, cross_list):
+def actions(setting, train_list, button_list, tutorial_list, cross_list, tutorial_cross):
 
     pos = pygame.mouse.get_pos()
 
@@ -99,28 +99,32 @@ def actions(setting, train_list, button_list, tutorial_list, cross_list):
             if event.button == 1:
                 ###if the left mouse button is clicked on the train the train freezes
                 for t in range(len(train_list)):
-                    if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
+                    if train_list[t].col_rect.collidepoint(pos):
                         train_list[t].frozen = True
 
                 for c in cross_list:
-                    if c.hitbox.collidepoint(pygame.mouse.get_pos()):
+                    if c.hitbox.collidepoint(pos):
                         c.vertical = not c.vertical
 
                 for t in range(len(tutorial_list)):
-                    if tutorial_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
+                    if tutorial_list[t].col_rect.collidepoint(pos):
                         tutorial_list[t].frozen = True
 
                 for b in button_list:
                     if b.rect.collidepoint(pos):
                         b.clicked = True
+
+                if tutorial_cross.hitbox.collidepoint(pos):
+                    tutorial_cross.vertical = not tutorial_cross.vertical
+                
                         
             if event.button == 3:
                 for t in range(len(train_list)):
-                    if train_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
+                    if train_list[t].col_rect.collidepoint(pos):
                         train_list[t].speedy = True
 
                 for t in range(len(tutorial_list)):
-                    if tutorial_list[t].col_rect.collidepoint(pygame.mouse.get_pos()):
+                    if tutorial_list[t].col_rect.collidepoint(pos):
                         tutorial_list[t].speedy = True
 """
                         if train_list[t].x_pos % 2:
