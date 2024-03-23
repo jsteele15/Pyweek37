@@ -18,15 +18,16 @@ def main():
     train_const = Music_Sound(1, "../res/Construction of train line sound.wav")
     constru = Music_Sound(1, "../res/Construction sound.wav")
     explo = Music_Sound(1, "../res/Explosion sound.wav")
+    ##########
     train_sound = Music_Sound(1, "../res/Train Sound.wav")
-
+    ##########
     track.load()
     track_list = [track, answering_machine, cheering, click, train_const, constru, explo, train_sound]
     for tl in track_list:
         tl.load()
 
     sounds_for_cutscene = [ answering_machine,cheering,]
-
+    train_sounds = [train_sound]
     pygame.display.set_caption("Thomas the Minister of Transportation")
     
     ###adds an icon
@@ -306,13 +307,13 @@ def main():
                     tutorial_list_lines[r].draw(screen)
 
                 for t in range(len(tutorial_list_trains)):
-                    tutorial_list_trains[t].move(setting, screen)
+                    tutorial_list_trains[t].move(setting, screen, train_sounds)
                 
-            if setting.txt_state >= 5:
+            if setting.txt_state == 5:
                 for l in tut_list_lines:
                     l.draw(screen)
                 for t in tut_list_trains:
-                    t.move(setting, screen, particles = setting.part[-1])
+                    t.move(setting, screen, train_sounds, particles = setting.part[-1])
                 tutorial_cross.draw(screen)
                 tutorial_cross.update_col(tut_list_trains, screen)
 
@@ -329,7 +330,7 @@ def main():
                 r.draw(screen)
 
             for t in range(len(setting.train_list)):
-                setting.train_list[t].move(setting, screen, particles = setting.part[t])
+                setting.train_list[t].move(setting, screen, train_sounds, particles = setting.part[t])
 
             for c in setting.cross_list:
                 c.draw(screen)

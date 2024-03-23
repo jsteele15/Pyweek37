@@ -150,7 +150,7 @@ class CutScene:
                 speed_buttons[2].draw(screen, ">>", setting)
                 button_list[0].draw(screen, "SKIP", setting)
                 button_list[1].draw(screen, "NEXT", setting)
-                text_list[9].draw(screen, "Right click on crossings to\ntrun them a train \ncan go through \nany crossing facing \nthe same direction\nOtherwise the train \ncrashes!")
+                text_list[9].draw(screen, "Left click on crossings to\ntrun them a train \ncan go through \nany crossing facing \nthe same direction\nOtherwise the train \ncrashes!")
                 
                 
             if setting.txt_state == 6:

@@ -51,6 +51,9 @@ class Train:
         self.NORMAL_COLOUR = (30, 30, 150)
         self.FROZE_COLOUR = (0, 213, 250)
         self.SPEEDY_COLOUR = (255, 210, 0)
+        
+        ##for sound to play once
+        self.sound_1 = False
 
         if self.ghost:
             gray = (150, 150, 150)
@@ -61,7 +64,7 @@ class Train:
         
         self.sprite = SpriteSheet(0, 0, 0, 0, 0, 0)
     
-    def move(self, setting, screen, particles = None):
+    def move(self, setting, screen, sound_list,particles = None):
         ###thisll work if the train hasnt crashed
         if self.alive == True and self.ghost == False:
 
@@ -87,11 +90,16 @@ class Train:
                     froze_ticks = (pygame.time.get_ticks() - self.s_tick_timer) // (1000/setting.game_speed)
                     self.multi = 2
                     self.RECT_COLOUR = self.SPEEDY_COLOUR
+                    if self.sound_1 == False:
+                        sound_list[0].play()
+                        self.sound_1 = True
+
                     if froze_ticks > 2:
                         self.multi = 1
                         self.speedy = False
                         setting.speedys += 1
                         self.RECT_COLOUR = self.NORMAL_COLOUR
+                        self.sound_1 = False
                     
                     
             if self.speedy == False:
