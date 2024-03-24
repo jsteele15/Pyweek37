@@ -10,9 +10,9 @@ Game instructions:
 Left click on trains to speed them up temporarily
 Right click to stop them temporarily
 Click on junctions to switch their directions 
-If trains hit each other or a junctiom facting the wrong way, they crash
-You get passanger points for every station a train reaches
-Try to drop off 30 0000 passangers and crash less than 6 trains to win
+If trains hit each other or a junction facing the wrong way, they crash
+You get passenger points for every station a train reaches
+Try to drop off 30 0000 passengers and crash less than 6 trains to win
 
 //////////
 Known bugs:
